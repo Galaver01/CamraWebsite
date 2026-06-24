@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAMRA — Nuestra Historia · Misión · Valores</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ════════════ BASE ════════════ */
+:root{
+  --negro:#1a1a1a;--naranja:#F5A623;--naranja-d:#d48c10;--naranja-c:#fff4e0;
+  --blanco:#fff;--gris-o:#111;--gris-m:#555;--gris-c:#f2f2f0;--gris-b:#e0e0e0;
+  --ease:cubic-bezier(0.22,1,0.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Barlow',sans-serif;background:var(--blanco);color:var(--negro);overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--negro);}
+::-webkit-scrollbar-thumb{background:var(--naranja);border-radius:3px;}
+
+/* ── PROGRESS ── */
+.progress-bar{position:fixed;top:0;left:0;z-index:2001;height:3px;width:0%;
+  background:linear-gradient(90deg,var(--naranja-d),var(--naranja),#ffc94d);
+  transition:width .08s linear;border-radius:0 2px 2px 0;box-shadow:0 0 8px rgba(245,166,35,.6);}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;
+  justify-content:space-between;padding:0 5%;height:72px;
+  background:rgba(26,26,26,0.97);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(245,166,35,0.15);transition:box-shadow .3s;}
+nav.scrolled{box-shadow:0 4px 24px rgba(0,0,0,.4);}
+.nav-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;
+  letter-spacing:-0.5px;color:var(--blanco);display:flex;align-items:center;gap:4px;text-decoration:none;}
+.nav-logo span{color:var(--naranja);}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:14px;font-weight:500;
+  letter-spacing:.5px;text-transform:uppercase;transition:color .2s;position:relative;padding-bottom:4px;}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:var(--naranja);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease);}
+.nav-links a:hover,.nav-links a.active{color:var(--blanco);}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+.nav-links a.active{color:var(--naranja);}
+.nav-cta{background:var(--naranja);color:var(--negro);padding:10px 22px;border-radius:3px;
+  font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;
+  text-decoration:none;transition:all .2s;border:2px solid var(--naranja);}
+.nav-cta:hover{background:transparent;color:var(--naranja);}
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;
+  padding:8px;border:none;background:none;width:44px;height:44px;border-radius:6px;}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--blanco);border-radius:2px;
+  transition:transform .35s var(--ease),opacity .25s;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.nav-mobile{position:fixed;top:72px;left:0;right:0;z-index:999;
+  background:rgba(14,14,14,.98);backdrop-filter:blur(20px);
+  border-bottom:2px solid rgba(245,166,35,.2);
+  max-height:0;overflow:hidden;transition:max-height .45s var(--ease),opacity .35s;
+  opacity:0;pointer-events:none;}
+.nav-mobile.open{max-height:100vh;opacity:1;pointer-events:all;}
+.nav-mobile-inner{padding:1.5rem 5% 2rem;}
+.nav-mobile .nav-links{flex-direction:column;gap:0;margin-bottom:1.5rem;}
+.nav-mobile .nav-links li{border-bottom:1px solid rgba(255,255,255,.06);
+  transform:translateX(-16px);opacity:0;transition:transform .4s var(--ease),opacity .4s;}
+.nav-mobile.open .nav-links li{transform:translateX(0);opacity:1;}
+.nav-mobile.open .nav-links li:nth-child(1){transition-delay:.05s;}
+.nav-mobile.open .nav-links li:nth-child(2){transition-delay:.10s;}
+.nav-mobile.open .nav-links li:nth-child(3){transition-delay:.15s;}
+.nav-mobile.open .nav-links li:nth-child(4){transition-delay:.20s;}
+.nav-mobile.open .nav-links li:nth-child(5){transition-delay:.25s;}
+.nav-mobile .nav-links a{display:block;padding:1rem 0;font-size:18px;}
+.nav-cta-mobile{display:block;text-align:center;background:var(--naranja);color:var(--negro);
+  padding:14px;border-radius:4px;font-weight:700;font-size:15px;text-decoration:none;
+  letter-spacing:.5px;text-transform:uppercase;
+  transform:translateY(8px);opacity:0;transition:transform .4s var(--ease) .28s,opacity .4s .28s,background .2s;}
+.nav-mobile.open .nav-cta-mobile{transform:translateY(0);opacity:1;}
+
+/* ── HERO PÁGINA ── */
+.page-hero{
+  background:var(--negro);padding-top:72px;
+  min-height:300px;display:flex;align-items:flex-end;
+  position:relative;overflow:hidden;
+}
+.page-hero-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    repeating-linear-gradient(90deg,rgba(245,166,35,.04) 0,rgba(245,166,35,.04) 1px,transparent 0,transparent 80px),
+    repeating-linear-gradient(0deg,rgba(245,166,35,.04) 0,rgba(245,166,35,.04) 1px,transparent 0,transparent 80px);
+}
+.page-hero-blob{
+  position:absolute;right:-60px;top:50%;transform:translateY(-50%);
+  width:400px;height:400px;border:40px solid rgba(245,166,35,.07);border-radius:50%;
+}
+.page-hero-blob2{
+  position:absolute;right:60px;top:50%;transform:translateY(-50%);
+  width:220px;height:220px;border:1.5px solid rgba(245,166,35,.18);border-radius:50%;
+}
+.page-hero-content{
+  position:relative;z-index:2;padding:2.5rem 5% 3.5rem;width:100%;
+  opacity:0;animation:slideUp .7s cubic-bezier(0.22,1,0.36,1) .05s forwards;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:1rem;
+  font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;}
+.breadcrumb a{color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;}
+.breadcrumb a:hover{color:var(--naranja);}
+.breadcrumb-sep{color:rgba(255,255,255,.25);}
+.breadcrumb span{color:var(--naranja);}
+.page-hero h1{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(48px,7vw,90px);font-weight:900;line-height:.92;
+  color:var(--blanco);letter-spacing:-2px;
+}
+.page-hero h1 em{color:var(--naranja);font-style:normal;}
+
+/* ── TAB NAVIGATION ── */
+.tab-nav-wrap{
+  position:sticky;top:72px;z-index:100;
+  background:var(--negro);
+  border-bottom:1px solid rgba(245,166,35,.15);
+}
+.tab-nav{
+  display:flex;position:relative;
+  padding:0 5%;
+  overflow-x:auto;
+  -ms-overflow-style:none;scrollbar-width:none;
+}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{
+  flex-shrink:0;
+  background:none;border:none;cursor:pointer;
+  padding:1.25rem 1.75rem;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:17px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.45);
+  transition:color .25s;
+  position:relative;white-space:nowrap;
+}
+.tab-btn:hover{color:rgba(255,255,255,.8);}
+.tab-btn.active{color:var(--naranja);}
+.tab-indicator{
+  position:absolute;bottom:0;left:0;height:3px;
+  background:linear-gradient(90deg,var(--naranja-d),var(--naranja));
+  border-radius:3px 3px 0 0;
+  transition:left .35s var(--ease),width .35s var(--ease);
+  box-shadow:0 0 8px rgba(245,166,35,.5);
+}
+
+/* ── TAB PANELS ── */
+.tab-panels{min-height:70vh;}
+.tab-panel{display:none;animation:panelIn .5s var(--ease) both;}
+.tab-panel.active{display:block;}
+@keyframes panelIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══════════════════════════════════════
+   HISTORIA — timeline
+══════════════════════════════════════ */
+.historia-section{background:var(--blanco);}
+.historia-intro{
+  padding:clamp(56px,7vw,80px) 5% clamp(40px,5vw,60px);
+  display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;
+  background:var(--negro);
+}
+.historia-intro-text{}
+.historia-tag{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.3);
+  padding:5px 14px;border-radius:2px;margin-bottom:1.5rem;
+}
+.historia-tag span{color:var(--naranja);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.historia-intro h2{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(40px,5vw,68px);font-weight:900;line-height:.95;
+  color:var(--blanco);letter-spacing:-1px;margin-bottom:1.5rem;
+}
+.historia-intro h2 span{color:var(--naranja);}
+.historia-intro p{font-size:16px;color:rgba(255,255,255,.6);line-height:1.8;}
+.historia-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(245,166,35,.15);}
+.hstat{background:rgba(255,255,255,.04);padding:2rem;text-align:center;}
+.hstat-num{font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,4vw,52px);font-weight:900;color:var(--naranja);line-height:1;}
+.hstat-lbl{font-size:12px;color:rgba(255,255,255,.45);margin-top:6px;letter-spacing:.5px;text-transform:uppercase;}
+
+/* Timeline */
+.timeline-wrap{padding:clamp(56px,7vw,80px) 5%;position:relative;}
+.timeline-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(32px,4vw,48px);font-weight:900;
+  text-align:center;margin-bottom:4rem;letter-spacing:-1px;
+}
+.timeline-title span{color:var(--naranja);}
+.timeline{position:relative;max-width:900px;margin:0 auto;}
+.timeline::before{
+  content:'';position:absolute;left:50%;top:0;bottom:0;
+  width:2px;background:linear-gradient(to bottom,var(--naranja),rgba(245,166,35,.1));
+  transform:translateX(-50%);
+}
+.tl-item{
+  display:grid;grid-template-columns:1fr 60px 1fr;
+  align-items:start;gap:0;margin-bottom:3rem;
+  opacity:0;transform:translateY(24px);
+  transition:opacity .6s var(--ease),transform .6s var(--ease);
+}
+.tl-item.visible{opacity:1;transform:translateY(0);}
+.tl-item:nth-child(odd) .tl-content{grid-column:1;text-align:right;padding-right:2rem;}
+.tl-item:nth-child(odd) .tl-year{grid-column:2;}
+.tl-item:nth-child(odd) .tl-empty{grid-column:3;}
+.tl-item:nth-child(even) .tl-empty{grid-column:1;}
+.tl-item:nth-child(even) .tl-year{grid-column:2;}
+.tl-item:nth-child(even) .tl-content{grid-column:3;padding-left:2rem;}
+.tl-year{
+  display:flex;flex-direction:column;align-items:center;gap:0;
+  position:relative;z-index:2;
+}
+.tl-dot{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--naranja);border:3px solid var(--blanco);
+  box-shadow:0 0 0 4px rgba(245,166,35,.25);
+  flex-shrink:0;
+}
+.tl-yr-label{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;
+  color:var(--naranja);margin-top:8px;white-space:nowrap;letter-spacing:1px;
+}
+.tl-content{padding-top:0;}
+.tl-card{
+  background:var(--blanco);border:1.5px solid var(--gris-b);border-radius:8px;
+  padding:1.25rem 1.5rem;transition:border-color .25s,box-shadow .25s,transform .25s var(--ease);
+}
+.tl-card:hover{border-color:var(--naranja);box-shadow:0 8px 28px rgba(245,166,35,.12);transform:translateY(-3px);}
+.tl-icon{width:36px;height:36px;background:var(--naranja-c);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:.75rem;}
+.tl-icon svg{width:20px;height:20px;stroke:var(--naranja);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.tl-card-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;margin-bottom:.4rem;letter-spacing:-.3px;}
+.tl-card-desc{font-size:14px;color:var(--gris-m);line-height:1.65;}
+
+/* ══════════════════════════════════════
+   MISIÓN Y VISIÓN
+══════════════════════════════════════ */
+.mv-section{background:var(--negro);}
+.mv-header{
+  padding:clamp(56px,7vw,80px) 5% clamp(40px,5vw,56px);
+  text-align:center;
+}
+.mv-header h2{
+  font-family:'Barlow Condensed',sans-serif;font-size:clamp(40px,5vw,72px);
+  font-weight:900;color:var(--blanco);letter-spacing:-1.5px;margin-bottom:1rem;
+}
+.mv-header h2 span{color:var(--naranja);}
+.mv-header p{color:rgba(255,255,255,.5);font-size:16px;max-width:520px;margin:0 auto;}
+
+.mv-cards{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:2px;background:rgba(245,166,35,.08);
+}
+.mv-card{padding:clamp(2.5rem,5vw,4rem) clamp(1.5rem,5vw,4rem);position:relative;overflow:hidden;}
+.mv-card-m{background:#0d1420;}
+.mv-card-v{background:#111824;}
+.mv-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--naranja);
+}
+.mv-card-badge{
+  display:inline-flex;align-items:center;gap:8px;margin-bottom:2rem;
+}
+.mv-card-badge-dot{width:10px;height:10px;border-radius:50%;background:var(--naranja);}
+.mv-card-badge-text{font-size:12px;font-weight:700;letter-spacing:2px;color:var(--naranja);text-transform:uppercase;}
+.mv-card-icon{
+  width:64px;height:64px;border-radius:12px;
+  background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);
+  display:flex;align-items:center;justify-content:center;margin-bottom:2rem;
+}
+.mv-card-icon svg{width:32px;height:32px;stroke:var(--naranja);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.mv-card h3{
+  font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,4vw,56px);
+  font-weight:900;color:var(--blanco);letter-spacing:-1px;line-height:.95;margin-bottom:1.5rem;
+}
+.mv-card h3 span{color:var(--naranja);}
+.mv-card p{font-size:16px;color:rgba(255,255,255,.65);line-height:1.85;max-width:480px;}
+.mv-card-bg-letter{
+  position:absolute;bottom:-20px;right:-10px;
+  font-family:'Barlow Condensed',sans-serif;font-size:200px;font-weight:900;
+  color:rgba(255,255,255,.025);line-height:1;pointer-events:none;letter-spacing:-5px;
+}
+
+/* Pilares */
+.mv-pillars{padding:clamp(56px,7vw,80px) 5%;background:var(--gris-c);}
+.mv-pillars-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:clamp(32px,4vw,48px);
+  font-weight:900;letter-spacing:-1px;margin-bottom:.5rem;
+}
+.mv-pillars-title span{color:var(--naranja);}
+.mv-pillars-sub{color:var(--gris-m);margin-bottom:3rem;font-size:16px;}
+.pillars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.pillar{
+  background:var(--blanco);border-radius:8px;padding:2rem;
+  border-left:3px solid var(--naranja);
+  transition:transform .25s var(--ease),box-shadow .25s;
+}
+.pillar:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.1);}
+.pillar-icon{width:40px;height:40px;background:var(--naranja-c);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:1rem;}
+.pillar-icon svg{width:22px;height:22px;stroke:var(--naranja);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.pillar-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;
+  letter-spacing:-.3px;margin-bottom:.5rem;}
+.pillar-desc{font-size:14px;color:var(--gris-m);line-height:1.65;}
+
+/* ══════════════════════════════════════
+   VALORES
+══════════════════════════════════════ */
+.valores-section{}
+.valores-hero{
+  background:var(--negro);
+  padding:clamp(56px,7vw,80px) 5%;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+}
+.valores-hero h2{
+  font-family:'Barlow Condensed',sans-serif;font-size:clamp(44px,6vw,80px);
+  font-weight:900;color:var(--blanco);letter-spacing:-1.5px;line-height:.92;margin-bottom:1rem;
+}
+.valores-hero h2 span{color:var(--naranja);}
+.valores-hero p{font-size:16px;color:rgba(255,255,255,.55);max-width:540px;line-height:1.75;}
+
+.valores-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+  background:var(--gris-b);
+}
+.valor-card{
+  background:var(--blanco);padding:clamp(2rem,4vw,3rem);
+  position:relative;overflow:hidden;
+  transition:background .3s,transform .3s var(--ease),box-shadow .3s;
+  cursor:default;
+}
+.valor-card:hover{background:var(--negro);transform:translateY(-3px);box-shadow:0 20px 50px rgba(0,0,0,.2);}
+.valor-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:var(--naranja);transform:scaleX(0);transform-origin:left;
+  transition:transform .35s var(--ease);
+}
+.valor-card:hover::after{transform:scaleX(1);}
+.valor-card:hover .valor-title{color:var(--blanco);}
+.valor-card:hover .valor-desc{color:rgba(255,255,255,.55);}
+.valor-card:hover .valor-icon-wrap{background:var(--naranja);}
+.valor-card:hover .valor-icon-wrap svg{stroke:var(--negro);}
+.valor-card:hover .valor-num{color:rgba(255,255,255,.04);}
+.valor-num{
+  font-family:'Barlow Condensed',sans-serif;font-size:80px;font-weight:900;
+  color:rgba(0,0,0,.04);position:absolute;top:.5rem;right:1.25rem;
+  line-height:1;pointer-events:none;transition:color .3s;
+}
+.valor-icon-wrap{
+  width:56px;height:56px;border-radius:8px;background:var(--naranja-c);
+  display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;
+  transition:background .3s;
+}
+.valor-icon-wrap svg{width:28px;height:28px;stroke:var(--naranja);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke .3s;}
+.valor-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;
+  letter-spacing:.5px;text-transform:uppercase;margin-bottom:.75rem;
+  color:var(--negro);transition:color .3s;}
+.valor-desc{font-size:14px;color:var(--gris-m);line-height:1.7;transition:color .3s;}
+
+/* Bloque CTA */
+.valores-cta{
+  background:var(--naranja);padding:clamp(48px,6vw,72px) 5%;
+  display:flex;justify-content:space-between;align-items:center;gap:2rem;flex-wrap:wrap;
+}
+.valores-cta h3{
+  font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,4vw,48px);
+  font-weight:900;color:var(--negro);letter-spacing:-1px;line-height:1;
+}
+.valores-cta p{color:rgba(0,0,0,.65);font-size:16px;margin-top:.5rem;}
+.btn-dark{
+  background:var(--negro);color:var(--blanco);
+  padding:15px 32px;border-radius:3px;font-weight:700;font-size:14px;
+  letter-spacing:.5px;text-transform:uppercase;text-decoration:none;
+  transition:all .25s;display:inline-flex;align-items:center;gap:8px;
+  white-space:nowrap;border:2px solid var(--negro);flex-shrink:0;
+}
+.btn-dark:hover{background:transparent;color:var(--negro);}
+
+/* ── FOOTER ── */
+footer{background:var(--gris-o);color:var(--blanco);padding:clamp(40px,6vw,60px) clamp(1.25rem,5vw,5%) 30px;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem;margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.08);}
+.footer-brand-name{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;letter-spacing:-.5px;margin-bottom:.5rem;}
+.footer-brand-name span{color:var(--naranja);}
+.footer-brand-desc{font-size:14px;color:rgba(255,255,255,.4);line-height:1.7;margin-bottom:1.5rem;}
+.footer-col-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--naranja);margin-bottom:1.25rem;}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.6rem;}
+.footer-links a{font-size:14px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s,padding-left .2s;}
+.footer-links a:hover{color:var(--naranja);padding-left:6px;}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:rgba(255,255,255,.3);flex-wrap:wrap;gap:1rem;}
+.footer-bottom b{color:var(--naranja);}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(24px) scale(.98);transition:opacity .65s var(--ease),transform .65s var(--ease);}
+.reveal.visible{opacity:1;transform:none;}
+.d1{transition-delay:.08s;}.d2{transition-delay:.16s;}.d3{transition-delay:.24s;}
+.d4{transition-delay:.32s;}.d5{transition-delay:.40s;}.d6{transition-delay:.48s;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .mv-cards{grid-template-columns:1fr;}
+  .pillars-grid{grid-template-columns:1fr 1fr;}
+  .valores-grid{grid-template-columns:1fr 1fr;}
+  .footer-top{grid-template-columns:1fr 1fr;gap:2.5rem;}
+  .footer-top>div:first-child{grid-column:span 2;}
+}
+@media(max-width:768px){
+  nav{padding:0 1.25rem;}
+  .nav-links,.nav-cta{display:none;}
+  .nav-hamburger{display:flex;}
+  .historia-intro{grid-template-columns:1fr;gap:2.5rem;}
+  .historia-stat-grid{grid-template-columns:1fr 1fr;}
+  .page-hero-blob,.page-hero-blob2{display:none;}
+  .timeline::before{left:28px;}
+  .tl-item{grid-template-columns:40px 1fr;grid-template-rows:auto;}
+  .tl-item:nth-child(odd) .tl-content,
+  .tl-item:nth-child(even) .tl-content{grid-column:2;text-align:left;padding:0 0 0 1rem;}
+  .tl-item:nth-child(odd) .tl-year,
+  .tl-item:nth-child(even) .tl-year{grid-column:1;grid-row:1;}
+  .tl-item:nth-child(odd) .tl-empty,
+  .tl-item:nth-child(even) .tl-empty{display:none;}
+  .tl-yr-label{display:none;}
+  .pillars-grid{grid-template-columns:1fr;}
+  .valores-grid{grid-template-columns:1fr;}
+  .valores-cta{flex-direction:column;text-align:center;}
+  .footer-top{grid-template-columns:1fr;}
+  .footer-top>div:first-child{grid-column:span 1;}
+  .tab-btn{padding:1rem 1.25rem;font-size:15px;}
+}
+@media(max-width:480px){
+  .historia-stat-grid{grid-template-columns:1fr 1fr;}
+  .pillars-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- PROGRESS -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- MOBILE MENU -->
+<div class="nav-mobile" id="mobileNav">
+  <div class="nav-mobile-inner">
+    <ul class="nav-links">
+      <li><a href="camra-logistica.html">Inicio</a></li>
+      <li><a href="camra-logistica.html#servicios">Servicios</a></li>
+      <li><a href="camra-nosotros.html" class="active">Nosotros</a></li>
+      <li><a href="camra-logistica.html#cobertura">Cobertura</a></li>
+      <li><a href="camra-logistica.html#contacto">Contacto</a></li>
+    </ul>
+    <a href="camra-logistica.html#contacto" class="nav-cta-mobile">Solicitar cotización</a>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a class="nav-logo" href="camra-logistica.html">C<span>A</span>MR<span>A</span></a>
+  <ul class="nav-links">
+    <li><a href="camra-logistica.html">Inicio</a></li>
+    <li><a href="camra-logistica.html#servicios">Servicios</a></li>
+    <li><a href="camra-nosotros.html" class="active">Nosotros</a></li>
+    <li><a href="camra-logistica.html#cobertura">Cobertura</a></li>
+    <li><a href="camra-logistica.html#contacto">Contacto</a></li>
+  </ul>
+  <a href="camra-logistica.html#contacto" class="nav-cta">Solicitar cotización</a>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-blob"></div>
+  <div class="page-hero-blob2"></div>
+  <div class="page-hero-content">
+    <div class="breadcrumb">
+      <a href="camra-logistica.html">Inicio</a>
+      <span class="breadcrumb-sep">›</span>
+      <span>Nosotros</span>
+    </div>
+    <h1>CAMRA<br><em>GRUPO</em><br>EMPRESARIAL</h1>
+  </div>
+</div>
+
+<!-- TAB NAVIGATION -->
+<div class="tab-nav-wrap">
+  <div class="tab-nav" id="tabNav">
+    <button class="tab-btn active" data-tab="historia">Historia</button>
+    <button class="tab-btn" data-tab="mision">Misión y Visión</button>
+    <button class="tab-btn" data-tab="valores">Valores</button>
+    <span class="tab-indicator" id="tabIndicator"></span>
+  </div>
+</div>
+
+<!-- TAB PANELS -->
+<div class="tab-panels">
+
+  <!-- ══════════ HISTORIA ══════════ -->
+  <div class="tab-panel active" id="panel-historia">
+
+    <div class="historia-intro">
+      <div class="historia-intro-text reveal">
+        <div class="historia-tag"><span>Nuestros orígenes</span></div>
+        <h2>DESDE<br><span>VERACRUZ</span><br>AL PAÍS</h2>
+        <p style="margin-top:1.5rem">CAMRA nació en el puerto de Veracruz con una visión clara: ofrecer servicios de transporte y logística de calidad que conecten a México. Con flota propia y un equipo joven y profesional, hemos crecido para convertirnos en un referente del sector.</p>
+        <p style="margin-top:1rem;color:rgba(255,255,255,.55)">Nuestra sede en JF Molina 180, Los Pinos, Veracruz, es el punto de partida de cientos de rutas que recorren la República cada semana.</p>
+      </div>
+      <div class="historia-stat-grid reveal d2">
+        <div class="hstat">
+          <div class="hstat-num" data-count="500">0</div>
+          <div class="hstat-lbl">Clientes atendidos</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-num" data-count="32">0</div>
+          <div class="hstat-lbl">Unidades de flota</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-num">100%</div>
+          <div class="hstat-lbl">Flota propia</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-num">MX</div>
+          <div class="hstat-lbl">Cobertura nacional</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-wrap">
+      <div class="timeline-title">LÍNEA DEL <span>TIEMPO</span></div>
+      <div class="timeline">
+
+        <div class="tl-item">
+          <div class="tl-content">
+            <div class="tl-card">
+              <div class="tl-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </div>
+              <div class="tl-card-title">Fundación en Veracruz</div>
+              <p class="tl-card-desc">CAMRA Grupo Empresarial se constituye en el Puerto de Veracruz con el propósito de ofrecer soluciones de transporte terrestre de calidad, con trato personalizado y enfoque en la puntualidad.</p>
+            </div>
+          </div>
+          <div class="tl-year">
+            <div class="tl-dot"></div>
+            <div class="tl-yr-label">INICIO</div>
+          </div>
+          <div class="tl-empty"></div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-empty"></div>
+          <div class="tl-year">
+            <div class="tl-dot"></div>
+            <div class="tl-yr-label">FLOTA</div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-card">
+              <div class="tl-icon">
+                <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              </div>
+              <div class="tl-card-title">Primera flota propia</div>
+              <p class="tl-card-desc">Adquisición de las primeras unidades propias — rabones, tortones y trailers — permitiendo ofrecer mayor disponibilidad y control de calidad en cada servicio contratado.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-content">
+            <div class="tl-card">
+              <div class="tl-icon">
+                <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="tl-card-title">Carga especializada y peligrosa</div>
+              <p class="tl-card-desc">Expansión del portafolio con el manejo de residuos peligrosos y carga de exceso de dimensiones. Certificación de operadores y protocolos específicos de seguridad.</p>
+            </div>
+          </div>
+          <div class="tl-year">
+            <div class="tl-dot"></div>
+            <div class="tl-yr-label">EXPANSIÓN</div>
+          </div>
+          <div class="tl-empty"></div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-empty"></div>
+          <div class="tl-year">
+            <div class="tl-dot"></div>
+            <div class="tl-yr-label">EQUIPO</div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-card">
+              <div class="tl-icon">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div class="tl-card-title">Consolidación del equipo</div>
+              <p class="tl-card-desc">Formación del equipo humano que hoy nos distingue: joven, profesional y con amplia experiencia en el sector. Incorporación de operadores especializados en plataformas y portacontenedores.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-content">
+            <div class="tl-card">
+              <div class="tl-icon">
+                <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              </div>
+              <div class="tl-card-title">Portacontenedores y plataformas</div>
+              <p class="tl-card-desc">Incorporación de portacontenedores de 20 y 40 pies, plataforma 48, cama baja de 2 y 3 ejes, lowboy y unidades piloto para atender las necesidades del comercio exterior en el Puerto de Veracruz.</p>
+            </div>
+          </div>
+          <div class="tl-year">
+            <div class="tl-dot"></div>
+            <div class="tl-yr-label">PUERTO</div>
+          </div>
+          <div class="tl-empty"></div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-empty"></div>
+          <div class="tl-year">
+            <div class="tl-dot"></div>
+            <div class="tl-yr-label">HOY</div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-card" style="border-color:var(--naranja);box-shadow:0 0 0 2px rgba(245,166,35,.15);">
+              <div class="tl-icon" style="background:var(--naranja);">
+                <svg viewBox="0 0 24 24" style="stroke:#1a1a1a"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div class="tl-card-title">CAMRA hoy — referente nacional</div>
+              <p class="tl-card-desc">Con sede en Veracruz y cobertura en toda la República, CAMRA Grupo Empresarial continúa creciendo, innovando y construyendo vínculos a largo plazo con sus clientes, siempre con el compromiso de llegar en tiempo y forma.</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /timeline -->
+    </div><!-- /timeline-wrap -->
+  </div><!-- /panel-historia -->
+
+
+  <!-- ══════════ MISIÓN Y VISIÓN ══════════ -->
+  <div class="tab-panel" id="panel-mision">
+
+    <div class="mv-section">
+      <div class="mv-header reveal">
+        <div class="section-label" style="justify-content:center;margin-bottom:1rem;display:inline-flex;">
+          <span style="font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--naranja);">¿Hacia dónde vamos?</span>
+        </div>
+        <h2>NUESTRO<br><span>DEBER SER</span></h2>
+        <p style="margin-top:1rem;">El propósito que guía cada decisión, cada ruta y cada entrega en CAMRA Grupo Empresarial.</p>
+      </div>
+
+      <div class="mv-cards">
+        <div class="mv-card mv-card-m reveal">
+          <div class="mv-card-badge">
+            <div class="mv-card-badge-dot"></div>
+            <div class="mv-card-badge-text">Misión</div>
+          </div>
+          <div class="mv-card-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <h3>POR<br>QUÉ<br><span>EXISTIMOS</span></h3>
+          <p>Proporcionar los servicios de transporte y logística en el ámbito nacional de una manera profesional, cubriendo las necesidades de los clientes y proporcionando un trato personalizado para que cumplan sus objetivos con un servicio de calidad.</p>
+          <div class="mv-card-bg-letter">M</div>
+        </div>
+        <div class="mv-card mv-card-v reveal d2">
+          <div class="mv-card-badge">
+            <div class="mv-card-badge-dot"></div>
+            <div class="mv-card-badge-text">Visión</div>
+          </div>
+          <div class="mv-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3>HACIA<br>DÓNDE<br><span>VAMOS</span></h3>
+          <p>Ser la empresa de referencia del sector de transporte y la logística, gracias al compromiso, implicación, servicios flexibles y ajustados a las necesidades, para poder transportar cualquier tipo de mercancía creando un vínculo a largo plazo con nuestros clientes.</p>
+          <div class="mv-card-bg-letter">V</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mv-pillars">
+      <div class="reveal">
+        <div class="mv-pillars-title">ALTA <span>EFICIENCIA</span></div>
+        <p class="mv-pillars-sub">Nuestros movimientos logísticos, maniobras y procesos garantizan que su mercancía llegará en tiempo y forma.</p>
+      </div>
+      <div class="pillars-grid">
+        <div class="pillar reveal d1">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="pillar-title">Puntualidad garantizada</div>
+          <p class="pillar-desc">Control profesional de cada etapa del proceso y los recursos necesarios para conseguir un rendimiento óptimo en cada entrega.</p>
+        </div>
+        <div class="pillar reveal d2">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="pillar-title">Carga segura</div>
+          <p class="pillar-desc">Operadores certificados, unidades en óptimas condiciones y protocolos de seguridad para cualquier tipo de mercancía.</p>
+        </div>
+        <div class="pillar reveal d3">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="pillar-title">Trato personalizado</div>
+          <p class="pillar-desc">Nos adaptamos a las necesidades de cada cliente y cuando es preciso, nos adelantamos a ellas para ofrecer la mejor solución.</p>
+        </div>
+        <div class="pillar reveal d1">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div class="pillar-title">Cobertura nacional</div>
+          <p class="pillar-desc">Desde el Puerto de Veracruz conectamos cada rincón del país, con rutas optimizadas y conocimiento del territorio mexicano.</p>
+        </div>
+        <div class="pillar reveal d2">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div class="pillar-title">Flota propia y versátil</div>
+          <p class="pillar-desc">Rabón, torton, trailers, portacontenedores, plataforma 48, cama baja, lowboy y camionetas 3.5t para cualquier tipo de carga.</p>
+        </div>
+        <div class="pillar reveal d3">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="pillar-title">Cumplimiento normativo</div>
+          <p class="pillar-desc">Carta porte, CFDI de traslado y documentación completa conforme a las regulaciones del SAT y la SCT en cada operación.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel-mision -->
+
+
+  <!-- ══════════ VALORES ══════════ -->
+  <div class="tab-panel" id="panel-valores">
+
+    <div class="valores-hero reveal">
+      <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.3);padding:5px 14px;border-radius:2px;margin-bottom:1.5rem;">
+        <span style="color:var(--naranja);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Lo que nos define</span>
+      </div>
+      <h2>NUESTROS<br><span>VALORES</span></h2>
+      <p style="margin-top:1rem;">Los principios que guían el trabajo diario de cada persona en CAMRA Grupo Empresarial, de la oficina a la carretera.</p>
+    </div>
+
+    <div class="valores-grid">
+
+      <div class="valor-card reveal d1">
+        <div class="valor-num">01</div>
+        <div class="valor-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="valor-title">Compromiso</div>
+        <p class="valor-desc">Trabajamos con transparencia para conseguir resultados que satisfagan a todas las partes implicadas en el proceso, desde el cliente hasta el operador en carretera.</p>
+      </div>
+
+      <div class="valor-card reveal d2">
+        <div class="valor-num">02</div>
+        <div class="valor-icon-wrap">
+          <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="valor-title">Innovación</div>
+        <p class="valor-desc">La empresa está en una búsqueda continua de aspectos donde mejorar, innovar y ser pioneros en diferentes apartados donde trabaja, adoptando tecnología y mejores prácticas del sector.</p>
+      </div>
+
+      <div class="valor-card reveal d3">
+        <div class="valor-num">03</div>
+        <div class="valor-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div class="valor-title">Proximidad</div>
+        <p class="valor-desc">Comprensión y empatía a la hora de satisfacer las necesidades de todos los clientes. No nos conformamos con adaptarnos a sus necesidades; si es preciso, nos adelantamos a ellas.</p>
+      </div>
+
+      <div class="valor-card reveal d1">
+        <div class="valor-num">04</div>
+        <div class="valor-icon-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="valor-title">Puntualidad</div>
+        <p class="valor-desc">Controlamos de forma profesional todas las partes del proceso y los recursos necesarios para conseguir un rendimiento óptimo y que su mercancía llegue cuando se prometió.</p>
+      </div>
+
+      <div class="valor-card reveal d2">
+        <div class="valor-num">05</div>
+        <div class="valor-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="valor-title">Responsabilidad Social</div>
+        <p class="valor-desc">Empresa comprometida y concienciada con el medio ambiente. Operamos con conciencia del impacto de nuestra actividad y buscamos prácticas que contribuyan a un transporte más sostenible.</p>
+      </div>
+
+      <div class="valor-card reveal d3">
+        <div class="valor-num">06</div>
+        <div class="valor-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="valor-title">Equipo Humano</div>
+        <p class="valor-desc">Trabajamos en equipo para conseguir un objetivo común, compartiendo información y conocimientos. Un equipo joven y profesional avalado por gran experiencia en el sector del transporte.</p>
+      </div>
+
+    </div>
+
+    <div class="valores-cta reveal">
+      <div>
+        <h3>¿LISTOS PARA<br>TRABAJAR JUNTOS?</h3>
+        <p>En CAMRA Grupo Empresarial vivimos nuestros valores en cada flete.</p>
+      </div>
+      <a href="camra-logistica.html#contacto" class="btn-dark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Solicitar cotización
+      </a>
+    </div>
+
+  </div><!-- /panel-valores -->
+
+</div><!-- /tab-panels -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">C<span>A</span>MR<span>A</span></div>
+      <p class="footer-brand-desc">Transportes de carga y fletes a nivel nacional. Carga general, materiales, residuos peligrosos y carga especializada con flota propia desde Veracruz.</p>
+      <div style="display:flex;gap:12px">
+        <a href="#" style="width:38px;height:38px;background:rgba(255,255,255,.07);border-radius:4px;display:flex;align-items:center;justify-content:center;transition:background .2s;" onmouseover="this.style.background='#F5A623'" onmouseout="this.style.background='rgba(255,255,255,0.07)'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="#" style="width:38px;height:38px;background:rgba(255,255,255,.07);border-radius:4px;display:flex;align-items:center;justify-content:center;transition:background .2s;" onmouseover="this.style.background='#F5A623'" onmouseout="this.style.background='rgba(255,255,255,0.07)'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 2H3v20l4-4h14V2z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Servicios</div>
+      <ul class="footer-links">
+        <li><a href="camra-logistica.html#servicios">Carga general</a></li>
+        <li><a href="camra-logistica.html#servicios">Carga peligrosa</a></li>
+        <li><a href="camra-logistica.html#servicios">Portacontenedores</a></li>
+        <li><a href="camra-logistica.html#servicios">Cama baja y lowboy</a></li>
+        <li><a href="camra-logistica.html#servicios">Fletes nacionales</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Empresa</div>
+      <ul class="footer-links">
+        <li><a href="camra-nosotros.html#panel-historia">Historia</a></li>
+        <li><a href="camra-nosotros.html#panel-mision">Misión y Visión</a></li>
+        <li><a href="camra-nosotros.html#panel-valores">Valores</a></li>
+        <li><a href="camra-logistica.html#cobertura">Cobertura</a></li>
+        <li><a href="camra-logistica.html#contacto">Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 <b>CAMRA</b> Grupo Empresarial · JF Molina 180 Int. 1, Los Pinos, Veracruz, Ver.</span>
+    <span>(229) 463-9825 · operaciones@camralogistics.com</span>
+  </div>
+</footer>
+
+<script>
+/* ══ PROGRESS BAR ══ */
+const pb=document.getElementById('progressBar');
+window.addEventListener('scroll',()=>{
+  const max=document.documentElement.scrollHeight-window.innerHeight;
+  pb.style.width=(max>0?(scrollY/max*100):0)+'%';
+  document.getElementById('navbar').classList.toggle('scrolled',scrollY>50);
+},{passive:true});
+
+/* ══ MOBILE MENU ══ */
+const mNav=document.getElementById('mobileNav'),ham=document.getElementById('hamburger');
+let mOpen=false;
+function toggleMenu(){
+  mOpen=!mOpen;mNav.classList.toggle('open',mOpen);ham.classList.toggle('open',mOpen);
+  document.body.style.overflow=mOpen?'hidden':'';
+}
+document.addEventListener('click',e=>{
+  if(mOpen&&!mNav.contains(e.target)&&!ham.contains(e.target)){
+    mOpen=false;mNav.classList.remove('open');ham.classList.remove('open');document.body.style.overflow='';
+  }
+});
+
+/* ══ TAB SYSTEM ══ */
+const tabBtns=document.querySelectorAll('.tab-btn');
+const tabPanels={
+  historia:document.getElementById('panel-historia'),
+  mision:document.getElementById('panel-mision'),
+  valores:document.getElementById('panel-valores'),
+};
+const indicator=document.getElementById('tabIndicator');
+
+function setIndicator(btn){
+  const nav=document.getElementById('tabNav');
+  const navRect=nav.getBoundingClientRect();
+  const btnRect=btn.getBoundingClientRect();
+  indicator.style.left=(btnRect.left-navRect.left+nav.scrollLeft)+'px';
+  indicator.style.width=btnRect.width+'px';
+}
+
+function switchTab(id){
+  tabBtns.forEach(b=>{
+    const active=b.dataset.tab===id;
+    b.classList.toggle('active',active);
+    if(active) setIndicator(b);
+  });
+  Object.entries(tabPanels).forEach(([k,p])=>{
+    p.classList.toggle('active',k===id);
+  });
+  // Trigger reveals in new panel
+  setTimeout(triggerReveals,50);
+}
+
+tabBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>switchTab(btn.dataset.tab));
+});
+
+// Init indicator on first active
+window.addEventListener('load',()=>{
+  const active=document.querySelector('.tab-btn.active');
+  if(active) setIndicator(active);
+});
+window.addEventListener('resize',()=>{
+  const active=document.querySelector('.tab-btn.active');
+  if(active) setIndicator(active);
+});
+
+/* ══ REVEAL OBSERVER ══ */
+function triggerReveals(){
+  const els=document.querySelectorAll('.tab-panel.active .reveal, .tab-panel.active .tl-item');
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+  },{threshold:0.1,rootMargin:'0px 0px -30px 0px'});
+  els.forEach(el=>{ if(!el.classList.contains('visible')) obs.observe(el); });
+}
+triggerReveals();
+
+/* ══ COUNTER ANIMATION ══ */
+function animCount(el,target){
+  let i=0;const steps=60;
+  const t=setInterval(()=>{
+    i++;const p=1-Math.pow(1-i/steps,3);
+    el.textContent=Math.round(p*target)+'+';
+    if(i>=steps){el.textContent=target+'+';clearInterval(t);}
+  },1600/steps);
+}
+const cntObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('[data-count]').forEach(el=>animCount(el,+el.dataset.count));
+      cntObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.4});
+document.querySelectorAll('.historia-stat-grid').forEach(g=>cntObs.observe(g));
+</script>
+</body>
+</html>
