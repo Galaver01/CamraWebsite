@@ -313,31 +313,62 @@ h2{
 
 /* ─── COBERTURA ─── */
 .cobertura{background:var(--negro);color:var(--blanco);padding:80px 5%;}
-.cobertura-inner{display:flex;align-items:center;justify-content:space-between;gap:3rem;flex-wrap:wrap;}
-.cobertura-text h2{color:var(--blanco);margin-bottom:1rem;}
-.cobertura-text p{color:rgba(255,255,255,0.5);font-size:15px;max-width:400px;line-height:1.7;}
-.cobertura-tags{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2rem;}
+.cobertura-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2.5rem;flex-wrap:wrap;gap:1.5rem;}
+.cobertura-header p{color:rgba(255,255,255,0.5);font-size:15px;max-width:400px;line-height:1.7;}
+.map-wrap{
+  position:relative;
+  background:#0a0f18;
+  border:1px solid rgba(245,166,35,0.18);
+  border-radius:12px;
+  overflow:hidden;
+  margin-bottom:2rem;
+  min-height:420px;
+}
+#mexico-map{width:100%;display:block;cursor:crosshair;}
+.map-tooltip{
+  position:absolute;
+  background:rgba(10,15,24,0.95);
+  border:1.5px solid var(--naranja);
+  color:white;padding:8px 14px;border-radius:4px;
+  font-family:'Barlow',sans-serif;
+  font-size:13px;font-weight:600;
+  pointer-events:none;opacity:0;
+  transition:opacity .15s;white-space:nowrap;z-index:10;
+}
+.map-overlay{
+  position:absolute;top:1rem;left:1rem;
+  background:rgba(0,0,0,0.6);
+  border:1px solid rgba(245,166,35,0.2);
+  border-radius:6px;padding:.75rem 1rem;
+  font-size:12px;
+}
+.map-overlay-title{color:var(--naranja);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:.5rem;}
+.legend-item{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.leg-hub{width:10px;height:10px;border-radius:50%;background:var(--naranja);box-shadow:0 0 6px var(--naranja);}
+.leg-city{width:8px;height:8px;border-radius:50%;background:rgba(245,166,35,0.6);}
+.leg-route{width:22px;height:2px;background:linear-gradient(90deg,var(--naranja),transparent);border-radius:1px;}
+.leg-label{color:rgba(255,255,255,0.6);font-size:11px;}
+.map-loading{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;
+  background:#0a0f18;
+}
+.map-loading-ring{
+  width:48px;height:48px;border-radius:50%;
+  border:3px solid rgba(245,166,35,0.2);
+  border-top-color:var(--naranja);
+  animation:spin 1s linear infinite;
+}
+.map-loading-text{color:rgba(255,255,255,0.4);font-size:13px;}
+.cobertura-tags{display:flex;flex-wrap:wrap;gap:.75rem;}
 .tag{
   padding:8px 18px;border:1px solid rgba(245,166,35,0.3);
   border-radius:2px;font-size:13px;font-weight:600;
   color:rgba(255,255,255,0.7);letter-spacing:0.5px;
   transition:all .2s;cursor:default;
 }
+.tag.active-tag{background:var(--naranja);border-color:var(--naranja);color:var(--negro);}
 .tag:hover{background:var(--naranja);border-color:var(--naranja);color:var(--negro);}
-.cobertura-map{
-  flex:1;min-width:300px;max-width:480px;
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(245,166,35,0.15);
-  border-radius:8px;padding:2rem;
-  display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;
-}
-.route-item{display:flex;align-items:center;gap:12px;}
-.route-dot{width:10px;height:10px;border-radius:50%;background:var(--naranja);flex-shrink:0;}
-.route-name{font-size:14px;color:rgba(255,255,255,0.7);font-weight:500;}
-.route-line{
-  width:40px;height:1px;background:rgba(245,166,35,0.4);
-  flex-shrink:0;
-}
 
 /* ─── CONTACTO ─── */
 .contacto{background:var(--gris-claro);}
@@ -439,7 +470,7 @@ footer{
 
 <!-- ─── NAV ─── -->
 <nav id="navbar">
-  <div class="nav-logo">C<span>A</span>M<span>RA</span></div>
+  <div class="nav-logo">C<span>A</span>MR<span>A</span></div>
   <ul class="nav-links">
     <li><a href="#servicios">Servicios</a></li>
     <li><a href="#nosotros">Nosotros</a></li>
@@ -570,7 +601,8 @@ footer{
 <section class="nosotros" id="nosotros">
   <div class="nosotros-inner">
     <div class="nosotros-visual reveal-left">
-            <div class="nos-cards">
+      <div class="big-letter">C</div>
+      <div class="nos-cards">
         <div class="nos-card">
           <div class="nos-card-num">500+</div>
           <div class="nos-card-label">Clientes satisfechos</div>
@@ -656,60 +688,42 @@ footer{
 
 <!-- ─── COBERTURA ─── -->
 <section class="cobertura" id="cobertura">
-  <div class="cobertura-inner">
-    <div class="cobertura-text reveal-left">
+  <div class="cobertura-header reveal">
+    <div>
       <div class="section-label"><span>Cobertura</span></div>
       <h2 style="color:var(--blanco)">PRESENTES EN<br><span style="color:var(--naranja)">TODO MÉXICO</span></h2>
-      <p>Con base en Veracruz, operamos rutas a nivel nacional conectando los principales centros industriales y comerciales del país.</p>
-      <div class="cobertura-tags">
-        <div class="tag">Veracruz</div>
-        <div class="tag">Ciudad de México</div>
-        <div class="tag">Monterrey</div>
-        <div class="tag">Guadalajara</div>
-        <div class="tag">Puebla</div>
-        <div class="tag">Mérida</div>
-        <div class="tag">Querétaro</div>
-        <div class="tag">Tampico</div>
-        <div class="tag">Coatzacoalcos</div>
-        <div class="tag">Lázaro Cárdenas</div>
-        <div class="tag">Tijuana</div>
-        <div class="tag">Todo el país</div>
-      </div>
     </div>
-    <div class="cobertura-map reveal-right">
-      <div class="route-item">
-        <div class="route-dot"></div>
-        <span class="route-name">Veracruz — CDMX</span>
-      </div>
-      <div class="route-item">
-        <div class="route-dot"></div>
-        <span class="route-name">Ver — Monterrey</span>
-      </div>
-      <div class="route-item">
-        <div class="route-dot"></div>
-        <span class="route-name">Ver — Guadalajara</span>
-      </div>
-      <div class="route-item">
-        <div class="route-dot"></div>
-        <span class="route-name">Ver — Tampico</span>
-      </div>
-      <div class="route-item">
-        <div class="route-dot"></div>
-        <span class="route-name">Ver — Puebla</span>
-      </div>
-      <div class="route-item">
-        <div class="route-dot"></div>
-        <span class="route-name">Ver — Mérida</span>
-      </div>
-      <div class="route-item">
-        <div class="route-dot"></div>
-        <span class="route-name">CDMX — Monterrey</span>
-      </div>
-      <div class="route-item">
-        <div class="route-dot"></div>
-        <span class="route-name">Rutas nacionales</span>
-      </div>
+    <p>Con base en Veracruz, operamos rutas a nivel nacional conectando los principales centros industriales y comerciales. Pasa el cursor sobre cualquier ciudad para ver la ruta.</p>
+  </div>
+
+  <div class="map-wrap reveal">
+    <div class="map-loading" id="mapLoading">
+      <div class="map-loading-ring"></div>
+      <span class="map-loading-text">Cargando mapa de México…</span>
     </div>
+    <svg id="mexico-map"></svg>
+    <div class="map-tooltip" id="mapTooltip"></div>
+    <div class="map-overlay">
+      <div class="map-overlay-title">Leyenda</div>
+      <div class="legend-item"><div class="leg-hub"></div><span class="leg-label">CAMRA — Sede Veracruz</span></div>
+      <div class="legend-item"><div class="leg-city"></div><span class="leg-label">Ciudades destino</span></div>
+      <div class="legend-item"><div class="leg-route"></div><span class="leg-label">Rutas activas</span></div>
+    </div>
+  </div>
+
+  <div class="cobertura-tags reveal" id="cityTags">
+    <div class="tag active-tag" data-city="Veracruz">📍 Veracruz (HUB)</div>
+    <div class="tag" data-city="CDMX">Ciudad de México</div>
+    <div class="tag" data-city="Monterrey">Monterrey</div>
+    <div class="tag" data-city="Guadalajara">Guadalajara</div>
+    <div class="tag" data-city="Puebla">Puebla</div>
+    <div class="tag" data-city="Mérida">Mérida</div>
+    <div class="tag" data-city="Querétaro">Querétaro</div>
+    <div class="tag" data-city="Tampico">Tampico</div>
+    <div class="tag" data-city="Coatzacoalcos">Coatzacoalcos</div>
+    <div class="tag" data-city="Lázaro Cárdenas">Lázaro Cárdenas</div>
+    <div class="tag" data-city="Tijuana">Tijuana</div>
+    <div class="tag" data-city="Chihuahua">Chihuahua</div>
   </div>
 </section>
 
@@ -925,6 +939,375 @@ window.addEventListener('scroll',()=>{
   const nav=document.getElementById('navbar');
   nav.style.background=window.scrollY>50?'rgba(26,26,26,0.98)':'rgba(26,26,26,0.96)';
 });
+</script>
+
+<!-- D3 MAP — Sin datos externos -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+/* ════════════════════════════════════════════════════
+   CAMRA — Mapa interactivo México (sin fetch externo)
+   Técnica: Voronoi clipeado a contorno de México
+════════════════════════════════════════════════════ */
+
+/* ── CIUDADES Y RUTAS ─────────────────────────── */
+const CITIES = [
+  { name:'Veracruz',          lon:-96.134, lat:19.173, hub:true },
+  { name:'CDMX',              lon:-99.133, lat:19.433 },
+  { name:'Monterrey',         lon:-100.316,lat:25.687 },
+  { name:'Guadalajara',       lon:-103.350,lat:20.660 },
+  { name:'Puebla',            lon:-98.206, lat:19.041 },
+  { name:'Mérida',            lon:-89.593, lat:20.967 },
+  { name:'Querétaro',         lon:-100.390,lat:20.589 },
+  { name:'Tampico',           lon:-97.862, lat:22.233 },
+  { name:'Coatzacoalcos',     lon:-94.450, lat:18.150 },
+  { name:'Lázaro Cárdenas',  lon:-102.200,lat:17.958 },
+  { name:'Tijuana',           lon:-117.038,lat:32.515 },
+  { name:'Chihuahua',         lon:-106.069,lat:28.635 },
+];
+
+const ROUTES = [
+  ...CITIES.filter(c=>!c.hub).map(c=>({from:'Veracruz',to:c.name,main:true})),
+  {from:'CDMX',to:'Monterrey'},{from:'CDMX',to:'Guadalajara'},
+  {from:'Monterrey',to:'Chihuahua'},{from:'CDMX',to:'Querétaro'},
+  {from:'Guadalajara',to:'Lázaro Cárdenas'},{from:'Monterrey',to:'Tampico'},
+];
+
+/* ── CAPITALES ESTATALES PARA VORONOI ────────── */
+const STATE_CAPS = [
+  {s:'Aguascalientes',  lon:-102.29,lat:21.88},
+  {s:'Baja California', lon:-115.47,lat:32.63, baja:true},
+  {s:'Baja Cal. Sur',   lon:-110.31,lat:24.14, baja:true},
+  {s:'Campeche',        lon:-90.53, lat:19.85},
+  {s:'Chiapas',         lon:-93.11, lat:16.75},
+  {s:'Chihuahua',       lon:-106.07,lat:28.63},
+  {s:'Coahuila',        lon:-100.99,lat:25.42},
+  {s:'Colima',          lon:-103.72,lat:19.24},
+  {s:'Durango',         lon:-104.67,lat:24.02},
+  {s:'Guanajuato',      lon:-101.26,lat:21.02},
+  {s:'Guerrero',        lon:-99.50, lat:17.55},
+  {s:'Hidalgo',         lon:-98.73, lat:20.12},
+  {s:'Jalisco',         lon:-103.35,lat:20.66},
+  {s:'Cdad. de México', lon:-99.13, lat:19.43},
+  {s:'Estado de Méx.',  lon:-99.66, lat:19.28},
+  {s:'Michoacán',       lon:-101.19,lat:19.70},
+  {s:'Morelos',         lon:-99.23, lat:18.92},
+  {s:'Nayarit',         lon:-104.90,lat:21.51},
+  {s:'Nuevo León',      lon:-100.32,lat:25.69},
+  {s:'Oaxaca',          lon:-96.72, lat:17.07},
+  {s:'Puebla',          lon:-98.21, lat:19.04},
+  {s:'Querétaro',       lon:-100.39,lat:20.59},
+  {s:'Quintana Roo',    lon:-88.30, lat:18.50},
+  {s:'San Luis Potosí', lon:-100.99,lat:22.15},
+  {s:'Sinaloa',         lon:-107.39,lat:24.80},
+  {s:'Sonora',          lon:-110.96,lat:29.07},
+  {s:'Tabasco',         lon:-92.92, lat:17.99},
+  {s:'Tamaulipas',      lon:-99.13, lat:23.74},
+  {s:'Tlaxcala',        lon:-98.24, lat:19.32},
+  {s:'Veracruz',        lon:-96.92, lat:19.53},
+  {s:'Yucatán',         lon:-89.62, lat:20.97},
+  {s:'Zacatecas',       lon:-102.55,lat:22.77},
+];
+
+/* ── CONTORNO MÉXICO INLINE (GeoJSON) ────────── */
+const GEO_BAJA = {type:"Feature",geometry:{type:"Polygon",coordinates:[[
+  [-117.1,32.5],[-114.8,32.7],[-114.2,31.5],[-113.5,30.0],
+  [-112.5,28.5],[-111.5,26.5],[-110.5,24.5],[-109.5,22.9],
+  [-110.2,23.5],[-111.0,25.0],[-112.0,26.5],[-113.0,28.5],
+  [-114.0,30.0],[-114.5,31.5],[-117.1,32.5]
+]]}};
+const GEO_MAIN = {type:"Feature",geometry:{type:"Polygon",coordinates:[[
+  [-114.8,32.7],[-108.2,31.3],[-106.5,31.8],[-104.8,29.5],
+  [-103.0,28.9],[-100.3,28.2],[-99.5,27.5],[-99.0,26.4],[-97.5,25.9],
+  [-97.4,24.5],[-97.4,22.3],[-97.6,21.0],[-97.0,19.8],
+  [-96.1,19.2],[-95.1,18.8],[-94.5,18.2],[-93.0,18.3],
+  [-92.0,18.5],[-91.0,18.8],[-90.6,18.4],[-90.0,17.3],
+  [-89.6,15.9],[-89.1,17.9],[-88.3,18.4],[-87.8,19.6],
+  [-87.4,20.4],[-87.1,21.2],[-86.9,21.5],[-87.7,21.5],
+  [-88.5,18.0],[-88.6,15.7],[-91.5,15.9],[-92.2,14.6],
+  [-94.7,15.9],[-96.5,15.7],[-98.5,16.3],[-99.7,16.8],
+  [-101.5,17.0],[-103.7,19.0],[-104.5,19.3],[-105.2,20.4],
+  [-105.6,21.5],[-106.4,23.0],[-107.5,24.5],[-109.4,25.6],
+  [-111.0,26.5],[-112.0,27.0],[-114.0,30.5],[-114.8,32.7]
+]]}};
+
+/* ── RENDER ──────────────────────────────────── */
+function initMexicoMap() {
+  const svgEl  = document.getElementById('mexico-map');
+  const loadEl = document.getElementById('mapLoading');
+  const tipEl  = document.getElementById('mapTooltip');
+  if (!svgEl) return;
+
+  const W = svgEl.parentElement.clientWidth  || 900;
+  const H = Math.round(W * 0.58);
+  svgEl.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svgEl.setAttribute('width', W);
+  svgEl.setAttribute('height', H);
+  svgEl.style.height = H+'px';
+
+  const svg  = d3.select('#mexico-map');
+  const defs = svg.append('defs');
+
+  /* PROJECTION — ajustada para cubrir toda México */
+  const proj = d3.geoMercator()
+    .center([-102, 22])
+    .scale(W * 1.31)
+    .translate([W/2, H*0.50]);
+  const gpath = d3.geoPath().projection(proj);
+
+  /* ── DEFS ── */
+  // Gradiente fondo
+  const bg = defs.append('radialGradient').attr('id','_bg').attr('cx','50%').attr('cy','45%').attr('r','75%');
+  bg.append('stop').attr('offset','0%').attr('stop-color','#0f1928');
+  bg.append('stop').attr('offset','100%').attr('stop-color','#060a12');
+
+  // Brillo rutas
+  const gfRoute = defs.append('filter').attr('id','_gr')
+    .attr('x','-60%').attr('y','-60%').attr('width','220%').attr('height','220%');
+  gfRoute.append('feGaussianBlur').attr('in','SourceGraphic').attr('stdDeviation','3').attr('result','b');
+  const fm1=gfRoute.append('feMerge'); fm1.append('feMergeNode').attr('in','b'); fm1.append('feMergeNode').attr('in','SourceGraphic');
+
+  // Brillo hub
+  const gfHub = defs.append('filter').attr('id','_gh')
+    .attr('x','-120%').attr('y','-120%').attr('width','340%').attr('height','340%');
+  gfHub.append('feGaussianBlur').attr('in','SourceGraphic').attr('stdDeviation','5').attr('result','b');
+  const fm2=gfHub.append('feMerge'); fm2.append('feMergeNode').attr('in','b'); fm2.append('feMergeNode').attr('in','SourceGraphic');
+
+  // Brillo ciudad
+  const gfCity = defs.append('filter').attr('id','_gc')
+    .attr('x','-100%').attr('y','-100%').attr('width','300%').attr('height','300%');
+  gfCity.append('feGaussianBlur').attr('in','SourceGraphic').attr('stdDeviation','2.5').attr('result','b');
+  const fm3=gfCity.append('feMerge'); fm3.append('feMergeNode').attr('in','b'); fm3.append('feMergeNode').attr('in','SourceGraphic');
+
+  // Gradiente borde del mapa
+  const gfBorder = defs.append('filter').attr('id','_gbo')
+    .attr('x','-10%').attr('y','-10%').attr('width','120%').attr('height','120%');
+  gfBorder.append('feGaussianBlur').attr('in','SourceGraphic').attr('stdDeviation','6').attr('result','b');
+  const fm4=gfBorder.append('feMerge'); fm4.append('feMergeNode').attr('in','b'); fm4.append('feMergeNode').attr('in','SourceGraphic');
+
+  // Clip paths
+  defs.append('clipPath').attr('id','_cb').append('path').attr('d',gpath(GEO_BAJA));
+  defs.append('clipPath').attr('id','_cm').append('path').attr('d',gpath(GEO_MAIN));
+
+  /* FONDO OCÉANO */
+  svg.append('rect').attr('width',W).attr('height',H).attr('fill','url(#_bg)');
+
+  /* CUADRÍCULA DE PUNTOS */
+  const dotG = svg.append('g').attr('opacity',0.07).attr('pointer-events','none');
+  const dp = 26;
+  for(let x=dp/2;x<W;x+=dp) for(let y=dp/2;y<H;y+=dp)
+    dotG.append('circle').attr('cx',x).attr('cy',y).attr('r',0.9).attr('fill','#F5A623');
+
+  /* PROYECTAR CAPITALES */
+  const caps = STATE_CAPS.map(s=>{const[x,y]=proj([s.lon,s.lat]);return{...s,x,y};});
+
+  /* VORONOI (divisiones estatales) */
+  const delaunay = d3.Delaunay.from(caps, d=>d.x, d=>d.y);
+  const voronoi  = delaunay.voronoi([0,0,W,H]);
+
+  const FILLS = ['#0c1a2e','#0f2038','#091524','#102240','#0b1c30','#0e2035','#0a1828','#111f3c'];
+  const HOV   = 'rgba(245,166,35,0.12)';
+
+  const mainG = svg.append('g').attr('clip-path','url(#_cm)');
+  const bajaG = svg.append('g').attr('clip-path','url(#_cb)');
+
+  caps.forEach((s,i)=>{
+    const cp = voronoi.renderCell(i);
+    if(!cp) return;
+    const g = s.baja ? bajaG : mainG;
+    const fill = FILLS[i%FILLS.length];
+    g.append('path').attr('d',cp)
+      .attr('fill',fill)
+      .attr('stroke','rgba(245,166,35,0.17)').attr('stroke-width',0.7)
+      .attr('data-state',s.s)
+      .style('cursor','pointer')
+      .on('mouseover',function(e){
+        d3.select(this).attr('fill',HOV);
+        const[mx,my]=d3.pointer(e,svgEl);
+        tipEl.style.left=Math.min(mx+14,W-210)+'px';
+        tipEl.style.top =Math.max(my-38,4)+'px';
+        tipEl.innerHTML=`<span style="color:#F5A623">▪</span> ${s.s}`;
+        tipEl.style.opacity='1';
+      })
+      .on('mouseleave',function(){d3.select(this).attr('fill',fill);tipEl.style.opacity='0';});
+  });
+
+  /* BORDES MEXICO (brillo + línea precisa) */
+  [GEO_BAJA,GEO_MAIN].forEach(geo=>{
+    svg.append('path').attr('d',gpath(geo)).attr('fill','none')
+      .attr('stroke','rgba(245,166,35,0.2)').attr('stroke-width',6)
+      .attr('filter','url(#_gbo)');
+    svg.append('path').attr('d',gpath(geo)).attr('fill','none')
+      .attr('stroke','rgba(245,166,35,0.6)').attr('stroke-width',1.3);
+  });
+
+  /* RUTA ANIMATED */
+  const cMap = Object.fromEntries(CITIES.map(c=>[c.name,c]));
+  const rG = svg.append('g');
+
+  ROUTES.forEach((r,i)=>{
+    const from=cMap[r.from]; const to=cMap[r.to];
+    if(!from||!to) return;
+    const[x1,y1]=proj([from.lon,from.lat]);
+    const[x2,y2]=proj([to.lon,to.lat]);
+    // Control point curvado perpendicular a la ruta
+    const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy);
+    const nx=-dy/len,ny=dx/len; // normal
+    const curve=len*0.15;
+    const mx=(x1+x2)/2+nx*curve, my=(y1+y2)/2+ny*curve;
+    const pd=`M${x1},${y1} Q${mx},${my} ${x2},${y2}`;
+    const isMain=r.main;
+
+    // Halo de brillo
+    rG.append('path').attr('d',pd).attr('fill','none')
+      .attr('stroke',isMain?'rgba(245,166,35,0.3)':'rgba(245,166,35,0.15)')
+      .attr('stroke-width',isMain?4:2.5).attr('filter','url(#_gr)');
+
+    // Línea animada
+    const ln=rG.append('path').attr('d',pd).attr('fill','none')
+      .attr('stroke',isMain?'rgba(245,166,35,0.85)':'rgba(245,166,35,0.45)')
+      .attr('stroke-width',isMain?1.8:1.1).attr('stroke-linecap','round');
+
+    const tLen=ln.node().getTotalLength();
+    ln.attr('stroke-dasharray',tLen).attr('stroke-dashoffset',tLen)
+      .transition().delay(250+i*90).duration(1400).ease(d3.easeQuadOut)
+      .attr('stroke-dashoffset',0)
+      .on('end',()=>{
+        // Punto viajero con estela
+        const dot=rG.append('circle').attr('r',isMain?3.5:2.5)
+          .attr('fill','#F5A623').attr('opacity',0).attr('filter','url(#_gc)');
+        const trail=rG.append('circle').attr('r',isMain?6:4.5)
+          .attr('fill','rgba(245,166,35,0.2)').attr('opacity',0);
+
+        function go(){
+          const nd=ln.node();
+          dot.attr('opacity',1); trail.attr('opacity',0.6);
+          const dur=1600+Math.random()*1200;
+          [dot,trail].forEach(el=>{
+            el.transition().duration(dur).ease(d3.easeLinear)
+              .attrTween('cx',()=>t=>nd.getPointAtLength(t*tLen).x)
+              .attrTween('cy',()=>t=>nd.getPointAtLength(t*tLen).y)
+              .on('end',()=>{el.attr('opacity',0);});
+          });
+          setTimeout(go, dur+1800+Math.random()*4000);
+        }
+        setTimeout(go,Math.random()*2500);
+      });
+  });
+
+  /* CIUDADES */
+  const cG=svg.append('g');
+  CITIES.forEach(city=>{
+    const[cx,cy]=proj([city.lon,city.lat]);
+    const g=cG.append('g').attr('transform',`translate(${cx},${cy})`).style('cursor','pointer');
+
+    if(city.hub){
+      // Anillo rotatorio exterior
+      const spin=g.append('circle').attr('r',24).attr('fill','none')
+        .attr('stroke','rgba(245,166,35,0.6)').attr('stroke-width',1.5)
+        .attr('stroke-dasharray','5 7');
+      (function rot(){
+        spin.transition().duration(9000).ease(d3.easeLinear)
+          .attrTween('transform',()=>t=>`rotate(${t*360})`).on('end',rot);
+      })();
+
+      // Anillo estático
+      g.append('circle').attr('r',24).attr('fill','none')
+        .attr('stroke','rgba(245,166,35,0.12)').attr('stroke-width',1);
+
+      // Pulsos
+      [17,12].forEach((r,ri)=>{
+        const pr=g.append('circle').attr('r',r).attr('fill','none')
+          .attr('stroke',`rgba(245,166,35,${0.35-ri*0.05})`).attr('stroke-width',1);
+        pr.append('animate').attr('attributeName','r').attr('values',`${r};${r+9};${r}`)
+          .attr('dur',`${2+ri*0.5}s`).attr('repeatCount','indefinite');
+        pr.append('animate').attr('attributeName','opacity').attr('values','0.6;0;0.6')
+          .attr('dur',`${2+ri*0.5}s`).attr('repeatCount','indefinite');
+      });
+
+      // Punto hub
+      g.append('circle').attr('r',9).attr('fill','#F5A623')
+        .attr('filter','url(#_gh)').attr('stroke','#fff').attr('stroke-width',2.5);
+      g.append('circle').attr('r',4).attr('fill','#fff');
+
+      // Etiqueta con fondo
+      g.append('rect').attr('x',-54).attr('y',-40).attr('width',108).attr('height',17)
+        .attr('fill','rgba(10,15,28,0.8)').attr('rx',4)
+        .attr('stroke','rgba(245,166,35,0.3)').attr('stroke-width',0.8);
+      g.append('text').attr('y',-28).attr('text-anchor','middle')
+        .attr('fill','#F5A623').attr('font-size','10.5px').attr('font-weight','800')
+        .attr('font-family','Barlow Condensed,sans-serif').attr('letter-spacing','1.5px')
+        .text('CAMRA · VERACRUZ');
+
+    } else {
+      // Pulso
+      const pr=g.append('circle').attr('r',7).attr('fill','none')
+        .attr('stroke','rgba(245,166,35,0.55)').attr('stroke-width',1);
+      pr.append('animate').attr('attributeName','r').attr('values','5;14;5')
+        .attr('dur','2.8s').attr('repeatCount','indefinite');
+      pr.append('animate').attr('attributeName','opacity').attr('values','0.7;0;0.7')
+        .attr('dur','2.8s').attr('repeatCount','indefinite');
+
+      // Punto
+      g.append('circle').attr('r',4.5)
+        .attr('fill','rgba(245,166,35,0.95)').attr('filter','url(#_gc)')
+        .attr('stroke','rgba(255,255,255,0.7)').attr('stroke-width',1.5);
+
+      // Etiqueta: derecha si lon > -100, izquierda si lon < -100
+      const right = city.lon > -100.5;
+      const dx = right ? 11 : -11;
+      const anchor = right ? 'start' : 'end';
+      const tw = city.name.length * 5.8;
+      g.append('rect')
+        .attr('x', right ? 9 : -9 - tw).attr('y',-9.5)
+        .attr('width',tw).attr('height',16)
+        .attr('fill','rgba(5,8,16,0.8)').attr('rx',3);
+      g.append('text').attr('x',dx).attr('y',4)
+        .attr('text-anchor',anchor)
+        .attr('fill','rgba(255,255,255,0.95)')
+        .attr('font-size','10px').attr('font-weight','700')
+        .attr('font-family','Barlow,sans-serif')
+        .text(city.name);
+    }
+
+    // Tooltip hover
+    g.on('mousemove',function(e){
+      const[mx,my]=d3.pointer(e,svgEl);
+      tipEl.style.left=Math.min(mx+16,W-220)+'px';
+      tipEl.style.top=Math.max(my-42,4)+'px';
+      tipEl.innerHTML=city.hub
+        ?`<span style="color:#F5A623">📍</span> <strong>${city.name}</strong> — Sede CAMRA`
+        :`<span style="color:#F5A623">🚚</span> Destino: <strong>${city.name}</strong>`;
+      tipEl.style.opacity='1';
+      document.querySelectorAll('[data-city]').forEach(t=>
+        t.classList.toggle('active-tag',t.dataset.city===city.name));
+    }).on('mouseleave',()=>{ tipEl.style.opacity='0'; });
+  });
+
+  /* VIÑETA (oscurece bordes del mapa) */
+  const vig=defs.append('radialGradient').attr('id','_vig').attr('cx','50%').attr('cy','50%').attr('r','70%');
+  vig.append('stop').attr('offset','55%').attr('stop-color','#000').attr('stop-opacity','0');
+  vig.append('stop').attr('offset','100%').attr('stop-color','#000').attr('stop-opacity','0.55');
+  svg.append('rect').attr('width',W).attr('height',H).attr('fill','url(#_vig)').attr('pointer-events','none');
+
+  /* ETIQUETA COORDENADAS */
+  svg.append('text').attr('x',W-12).attr('y',H-8).attr('text-anchor','end')
+    .attr('fill','rgba(245,166,35,0.25)').attr('font-size','9px')
+    .attr('font-family','IBM Plex Mono,monospace').text('22°N 102°W · México');
+
+  loadEl.style.display='none';
+
+  /* TAGS interacción */
+  document.querySelectorAll('[data-city]').forEach(tag=>{
+    tag.addEventListener('mouseenter',()=>{ if(tag.dataset.city!=='Veracruz') tag.classList.add('active-tag'); });
+    tag.addEventListener('mouseleave',()=>{ if(tag.dataset.city!=='Veracruz') tag.classList.remove('active-tag'); });
+  });
+}
+
+/* Activar cuando la sección sea visible */
+const _mapIO=new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting){initMexicoMap();_mapIO.disconnect();}
+},{threshold:0.1});
+_mapIO.observe(document.getElementById('cobertura'));
 </script>
 </body>
 </html>
