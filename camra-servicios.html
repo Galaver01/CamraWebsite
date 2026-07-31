@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAMRA — Servicios de Transporte y Logística</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --negro:#1a1a1a;--naranja:#F5A623;--naranja-d:#d48c10;--naranja-c:#fff4e0;
+  --blanco:#fff;--gris-o:#111;--gris-m:#555;--gris-c:#f2f2f0;--gris-b:#e0e0e0;
+  --ease:cubic-bezier(0.22,1,0.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;overflow-x:clip;}
+body{font-family:'Barlow',sans-serif;background:var(--blanco);color:var(--negro);}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--negro);}
+::-webkit-scrollbar-thumb{background:var(--naranja);border-radius:3px;}
+
+/* ══ PROGRESS ══ */
+.progress-bar{position:fixed;top:0;left:0;z-index:2001;height:3px;width:0%;
+  background:linear-gradient(90deg,var(--naranja-d),var(--naranja),#ffc94d);
+  border-radius:0 2px 2px 0;box-shadow:0 0 8px rgba(245,166,35,.6);}
+
+/* ══ NAV ══ */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;
+  justify-content:space-between;padding:0 5%;height:72px;
+  background:rgba(26,26,26,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(245,166,35,.15);transition:box-shadow .3s;
+  -webkit-transform:translateZ(0);transform:translateZ(0);}
+nav.scrolled{box-shadow:0 4px 24px rgba(0,0,0,.4);}
+.nav-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;
+  letter-spacing:-.5px;color:var(--blanco);display:flex;align-items:center;gap:4px;text-decoration:none;}
+.nav-logo span{color:var(--naranja);}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:14px;font-weight:500;
+  letter-spacing:.5px;text-transform:uppercase;transition:color .2s;position:relative;padding-bottom:4px;}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:var(--naranja);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease);}
+.nav-links a:hover,.nav-links a.active{color:var(--blanco);}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+.nav-links a.active{color:var(--naranja);}
+.nav-cta{background:var(--naranja);color:var(--negro);padding:10px 22px;border-radius:3px;
+  font-weight:700;font-size:13px;letter-spacing:.5px;text-transform:uppercase;
+  text-decoration:none;transition:all .2s;border:2px solid var(--naranja);white-space:nowrap;}
+.nav-cta:hover{background:transparent;color:var(--naranja);}
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;
+  padding:8px;border:none;background:none;width:44px;height:44px;border-radius:6px;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--blanco);border-radius:2px;
+  transition:transform .35s var(--ease),opacity .25s;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.nav-mobile{position:fixed;top:72px;left:0;right:0;z-index:999;
+  background:rgba(14,14,14,.98);backdrop-filter:blur(20px);
+  border-bottom:2px solid rgba(245,166,35,.2);
+  max-height:0;overflow:hidden;transition:max-height .45s var(--ease),opacity .35s;
+  opacity:0;pointer-events:none;-webkit-transform:translateZ(0);transform:translateZ(0);}
+.nav-mobile.open{max-height:100vh;opacity:1;pointer-events:all;}
+.nav-mobile-inner{padding:1.5rem 5% 2rem;}
+.nav-mobile .nav-links{display:flex !important;flex-direction:column;gap:0;margin-bottom:1.5rem;}
+.nav-mobile .nav-links li{border-bottom:1px solid rgba(255,255,255,.06);
+  transform:translateX(-16px);opacity:0;transition:transform .4s var(--ease),opacity .4s;}
+.nav-mobile.open .nav-links li{transform:translateX(0);opacity:1;}
+.nav-mobile.open .nav-links li:nth-child(1){transition-delay:.05s;}
+.nav-mobile.open .nav-links li:nth-child(2){transition-delay:.10s;}
+.nav-mobile.open .nav-links li:nth-child(3){transition-delay:.15s;}
+.nav-mobile.open .nav-links li:nth-child(4){transition-delay:.20s;}
+.nav-mobile.open .nav-links li:nth-child(5){transition-delay:.25s;}
+.nav-mobile .nav-links a{display:block !important;padding:1rem 0;font-size:18px;}
+.nav-cta-mobile{display:block;text-align:center;background:var(--naranja);color:var(--negro);
+  padding:14px;border-radius:4px;font-weight:700;font-size:15px;text-decoration:none;
+  letter-spacing:.5px;text-transform:uppercase;
+  transform:translateY(8px);opacity:0;transition:transform .4s var(--ease) .28s,opacity .4s .28s;}
+.nav-mobile.open .nav-cta-mobile{transform:translateY(0);opacity:1;}
+
+/* ══ HERO (sin imagen — fondo tramado + degradado de marca) ══ */
+.page-hero{padding-top:72px;min-height:380px;display:flex;align-items:flex-end;
+  position:relative;overflow:hidden;background:var(--negro);}
+.hero-overlay{position:absolute;inset:0;
+  background:radial-gradient(120% 100% at 100% 0%,rgba(245,166,35,.16) 0%,transparent 55%),
+              linear-gradient(180deg,#111 0%,#1a1a1a 100%);}
+.hero-grid{position:absolute;inset:0;pointer-events:none;
+  background-image:repeating-linear-gradient(90deg,rgba(245,166,35,.05) 0,rgba(245,166,35,.05) 1px,transparent 0,transparent 80px),
+  repeating-linear-gradient(0deg,rgba(245,166,35,.05) 0,rgba(245,166,35,.05) 1px,transparent 0,transparent 80px);}
+.hero-content{position:relative;z-index:2;padding:2.5rem 5% 3rem;width:100%;
+  opacity:0;animation:slideUp .7s var(--ease) .05s forwards;}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:1rem;
+  font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;}
+.breadcrumb a{color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s;}
+.breadcrumb a:hover{color:var(--naranja);}
+.breadcrumb-sep{color:rgba(255,255,255,.25);}
+.breadcrumb-cur{color:var(--naranja);}
+.page-hero h1{font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(52px,8vw,100px);font-weight:900;line-height:.9;
+  color:var(--blanco);letter-spacing:-2px;margin-bottom:.75rem;}
+.page-hero h1 em{color:var(--naranja);font-style:normal;}
+.hero-sub{font-size:clamp(14px,1.8vw,17px);color:rgba(255,255,255,.6);
+  max-width:540px;line-height:1.7;font-weight:300;}
+
+/* ══ TAB NAV ══ */
+.tab-nav-wrap{position:sticky;top:72px;z-index:100;background:var(--negro);
+  border-bottom:1px solid rgba(245,166,35,.15);}
+.tab-nav{display:flex;position:relative;padding:0 5%;
+  overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{flex-shrink:0;background:none;border:none;cursor:pointer;
+  padding:1.2rem 1.6rem;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.4);transition:color .25s;
+  position:relative;white-space:nowrap;}
+.tab-btn:hover{color:rgba(255,255,255,.75);}
+.tab-btn.active{color:var(--naranja);}
+.tab-indicator{position:absolute;bottom:0;left:0;height:3px;
+  background:linear-gradient(90deg,var(--naranja-d),var(--naranja));
+  border-radius:3px 3px 0 0;
+  transition:left .35s var(--ease),width .35s var(--ease);
+  box-shadow:0 0 8px rgba(245,166,35,.5);}
+
+/* ══ PANELS ══ */
+.tab-panels{min-height:70vh;}
+.tab-panel{display:none;animation:panelIn .45s var(--ease) both;}
+.tab-panel.active{display:block;}
+@keyframes panelIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══ PANEL INTRO ══ */
+.panel-intro{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;min-height:480px;
+}
+/* Bloque visual que reemplaza la fotografía: tramado + gran cifra + ícono */
+.pi-visual{position:relative;overflow:hidden;background:var(--gris-o);
+  display:flex;align-items:center;justify-content:center;min-height:320px;padding:2rem;}
+.pi-visual-grid{position:absolute;inset:0;
+  background-image:repeating-linear-gradient(45deg,rgba(245,166,35,.06) 0,rgba(245,166,35,.06) 1px,transparent 0,transparent 34px);}
+.pi-visual-inner{position:relative;z-index:1;text-align:center;}
+.pi-visual-icon{width:76px;height:76px;margin:0 auto 1.25rem;border-radius:50%;
+  background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.35);
+  display:flex;align-items:center;justify-content:center;}
+.pi-visual-icon svg{width:36px;height:36px;stroke:var(--naranja);fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;}
+.pi-visual-num{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:3px;
+  color:rgba(255,255,255,.35);text-transform:uppercase;}
+.pi-img-badge{position:absolute;bottom:1.5rem;left:1.5rem;z-index:2;
+  background:var(--naranja);color:var(--negro);
+  font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  padding:5px 14px;border-radius:2px;}
+.pi-text{padding:clamp(2.5rem,5vw,4rem);
+  display:flex;flex-direction:column;justify-content:center;}
+.pi-tag{display:inline-flex;align-items:center;gap:8px;margin-bottom:1.25rem;}
+.pi-tag-dot{width:8px;height:8px;border-radius:50%;background:var(--naranja);}
+.pi-tag-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--naranja);}
+.pi-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,4.5vw,60px);
+  font-weight:900;line-height:.92;letter-spacing:-1px;margin-bottom:1.25rem;}
+.pi-title em{color:var(--naranja);font-style:normal;}
+.pi-desc{font-size:16px;color:var(--gris-m);line-height:1.8;margin-bottom:2rem;}
+/* versión oscura */
+.pi-dark .pi-title{color:var(--blanco);}
+.pi-dark .pi-desc{color:rgba(255,255,255,.6);}
+
+/* ══ FEATURE LIST ══ */
+.feat-list{list-style:none;display:flex;flex-direction:column;gap:.625rem;margin-bottom:2rem;}
+.feat-list li{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.55;}
+.feat-list li::before{content:'';flex-shrink:0;margin-top:2px;width:18px;height:18px;border-radius:50%;
+  background:var(--naranja);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a1a1a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+  background-size:10px;background-position:center;background-repeat:no-repeat;}
+
+/* ══ SPECS ROW ══ */
+.specs-row{display:flex;gap:1px;background:var(--gris-b);border-radius:8px;overflow:hidden;margin-bottom:2rem;}
+.spec{flex:1;background:var(--gris-c);padding:.875rem 1rem;text-align:center;}
+.spec-val{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;
+  color:var(--naranja);line-height:1;}
+.spec-key{font-size:11px;color:var(--gris-m);margin-top:4px;letter-spacing:.3px;}
+.pi-dark .specs-row{background:rgba(255,255,255,.08);}
+.pi-dark .spec{background:rgba(255,255,255,.04);}
+.pi-dark .spec-key{color:rgba(255,255,255,.4);}
+
+/* ══ UNIDADES GRID (dentro panel) ══ */
+.unidades-section{
+  padding:clamp(48px,6vw,72px) clamp(1.25rem,5vw,5%);
+  background:var(--gris-c);
+}
+.us-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,3.5vw,44px);
+  font-weight:900;letter-spacing:-1px;margin-bottom:.5rem;}
+.us-title span{color:var(--naranja);}
+.us-sub{font-size:15px;color:var(--gris-m);margin-bottom:2.5rem;}
+.unidades-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;}
+.unidad-card{background:var(--blanco);border-radius:8px;overflow:hidden;
+  border:1.5px solid var(--gris-b);
+  transition:transform .25s var(--ease),box-shadow .25s,border-color .25s;}
+.unidad-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.12);border-color:var(--naranja);}
+/* Cabecera de tarjeta sin foto: tramado + icono + etiqueta */
+.unidad-card-visual{position:relative;height:160px;overflow:hidden;background:var(--negro);
+  display:flex;align-items:center;justify-content:center;}
+.unidad-card-visual-grid{position:absolute;inset:0;
+  background-image:repeating-linear-gradient(45deg,rgba(245,166,35,.07) 0,rgba(245,166,35,.07) 1px,transparent 0,transparent 22px);}
+.unidad-card-visual svg{position:relative;z-index:1;width:44px;height:44px;stroke:var(--naranja);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:.9;}
+.unidad-card-tag{position:absolute;top:.75rem;left:.75rem;z-index:2;
+  background:var(--naranja);color:var(--negro);
+  font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  padding:3px 10px;border-radius:2px;}
+.unidad-card-body{padding:1.25rem;}
+.unidad-name{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;
+  letter-spacing:-.3px;margin-bottom:.25rem;}
+.unidad-cap{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--naranja);
+  margin-bottom:.5rem;}
+.unidad-desc{font-size:13px;color:var(--gris-m);line-height:1.6;}
+
+/* ══ TABLA COMPLETA ══ */
+.tabla-section{
+  padding:clamp(48px,6vw,72px) clamp(1.25rem,5vw,5%);
+  background:var(--negro);
+}
+.tabla-section h2{font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(32px,4vw,56px);font-weight:900;color:var(--blanco);
+  letter-spacing:-1px;margin-bottom:.5rem;}
+.tabla-section h2 span{color:var(--naranja);}
+.tabla-section p{font-size:15px;color:rgba(255,255,255,.5);margin-bottom:2rem;}
+.tabla-wrap{overflow-x:auto;border-radius:8px;border:1px solid rgba(245,166,35,.15);}
+table.tbl{width:100%;border-collapse:collapse;min-width:600px;}
+table.tbl thead tr{background:rgba(245,166,35,.1);border-bottom:2px solid rgba(245,166,35,.3);}
+table.tbl th{padding:.875rem 1.25rem;text-align:left;font-size:11px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--naranja);white-space:nowrap;}
+table.tbl tbody tr{border-bottom:1px solid rgba(255,255,255,.06);transition:background .15s;}
+table.tbl tbody tr:last-child{border-bottom:none;}
+table.tbl tbody tr:hover{background:rgba(245,166,35,.05);}
+table.tbl td{padding:.875rem 1.25rem;color:rgba(255,255,255,.8);vertical-align:middle;}
+.td-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--blanco);}
+.td-cap{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--naranja);}
+.td-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;
+  background:rgba(245,166,35,.12);color:var(--naranja);border:1px solid rgba(245,166,35,.25);}
+.td-badge.red{background:rgba(220,50,50,.12);color:#ff6b6b;border-color:rgba(220,50,50,.25);}
+.td-badge.blue{background:rgba(80,160,255,.1);color:#7ab8ff;border-color:rgba(80,160,255,.2);}
+
+/* ══ GALLERY (horizontal, ahora tarjetas sin foto) ══ */
+.gallery-section{padding:clamp(48px,6vw,72px) 0 clamp(48px,6vw,72px);background:var(--negro);}
+.gallery-header{padding:0 5% 2rem;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;}
+.gallery-header h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(32px,4vw,52px);
+  font-weight:900;color:var(--blanco);letter-spacing:-1px;line-height:.95;}
+.gallery-header h2 span{color:var(--naranja);}
+.gallery-header p{font-size:15px;color:rgba(255,255,255,.5);max-width:380px;line-height:1.6;}
+.gallery-track-wrap{position:relative;}
+.gallery-track-wrap::before,.gallery-track-wrap::after{content:'';position:absolute;top:0;bottom:0;
+  width:80px;z-index:2;pointer-events:none;}
+.gallery-track-wrap::before{left:0;background:linear-gradient(90deg,var(--negro),transparent);}
+.gallery-track-wrap::after{right:0;background:linear-gradient(-90deg,var(--negro),transparent);}
+.gallery-track{display:flex;gap:1.25rem;padding:0 5% 1.5rem;overflow-x:auto;
+  -ms-overflow-style:none;scrollbar-width:none;cursor:grab;scroll-snap-type:x mandatory;}
+.gallery-track::-webkit-scrollbar{display:none;}
+.gallery-track:active{cursor:grabbing;}
+.gallery-card{flex-shrink:0;width:clamp(220px,32vw,320px);border-radius:10px;overflow:hidden;
+  position:relative;scroll-snap-align:start;background:var(--gris-o);
+  border:1px solid rgba(245,166,35,.15);
+  transition:transform .3s var(--ease),box-shadow .3s,border-color .3s;}
+.gallery-card:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,.5);border-color:rgba(245,166,35,.4);}
+.gallery-card-visual{height:150px;position:relative;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#151515,#1e1e1e);}
+.gallery-card-visual-grid{position:absolute;inset:0;
+  background-image:repeating-linear-gradient(45deg,rgba(245,166,35,.06) 0,rgba(245,166,35,.06) 1px,transparent 0,transparent 22px);}
+.gallery-card-visual svg{position:relative;z-index:1;width:38px;height:38px;stroke:var(--naranja);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:.85;}
+.gallery-card-body{padding:1rem 1.25rem 1.25rem;}
+.gc-tag{display:inline-block;background:var(--naranja);color:var(--negro);
+  font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  padding:3px 10px;border-radius:2px;margin-bottom:.6rem;width:fit-content;}
+.gc-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;
+  color:var(--blanco);line-height:1;margin-bottom:.35rem;}
+.gc-cap{font-size:12px;color:rgba(255,255,255,.6);}
+.gallery-hint{display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:.5rem 0;font-size:12px;color:rgba(255,255,255,.3);letter-spacing:.5px;}
+.gallery-hint svg{width:15px;height:15px;stroke:rgba(255,255,255,.3);fill:none;stroke-width:2;stroke-linecap:round;}
+
+/* ══ LOGISTICA STEPS ══ */
+.proceso-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-bottom:2rem;}
+.paso-card{background:var(--gris-c);border-radius:8px;padding:1.75rem;
+  border-left:3px solid var(--naranja);
+  transition:transform .25s var(--ease),box-shadow .25s;}
+.paso-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.1);}
+.paso-num{font-family:'Barlow Condensed',sans-serif;font-size:48px;font-weight:900;
+  color:rgba(245,166,35,.2);line-height:1;margin-bottom:.75rem;}
+.paso-icon{width:40px;height:40px;background:var(--naranja-c);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:1rem;}
+.paso-icon svg{width:22px;height:22px;stroke:var(--naranja);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.paso-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;
+  letter-spacing:-.3px;margin-bottom:.4rem;}
+.paso-desc{font-size:14px;color:var(--gris-m);line-height:1.65;}
+
+/* ══ DARK PANEL BG ══ */
+.bg-dark{background:var(--negro);}
+.bg-dark .feat-list li{color:rgba(255,255,255,.75);}
+
+/* ══ CTA FINAL ══ */
+.cta-final{background:var(--naranja);
+  padding:clamp(56px,8vw,90px) clamp(1.25rem,5vw,5%);
+  display:flex;justify-content:space-between;align-items:center;gap:2rem;flex-wrap:wrap;}
+.cta-final-text h2{font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(32px,5vw,64px);font-weight:900;color:var(--negro);letter-spacing:-1.5px;line-height:.92;}
+.cta-final-text p{font-size:16px;color:rgba(0,0,0,.65);margin-top:.75rem;max-width:480px;line-height:1.6;}
+.cta-btns{display:flex;gap:.75rem;flex-wrap:wrap;flex-shrink:0;}
+.btn-dark{background:var(--negro);color:var(--blanco);padding:14px 28px;border-radius:3px;
+  font-weight:700;font-size:14px;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;
+  transition:all .25s;display:inline-flex;align-items:center;gap:8px;border:2px solid var(--negro);min-height:48px;}
+.btn-dark:hover{background:transparent;color:var(--negro);}
+.btn-outline-dark{background:transparent;color:var(--negro);padding:14px 28px;border-radius:3px;
+  font-weight:600;font-size:14px;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;
+  transition:all .25s;display:inline-flex;align-items:center;gap:8px;border:2px solid rgba(0,0,0,.4);min-height:48px;}
+.btn-outline-dark:hover{border-color:var(--negro);}
+
+/* ══ FOOTER ══ */
+footer{background:var(--gris-o);color:var(--blanco);padding:clamp(40px,6vw,60px) clamp(1.25rem,5vw,5%) 30px;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem;
+  margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.08);}
+.footer-brand-name{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;
+  letter-spacing:-.5px;margin-bottom:.5rem;}
+.footer-brand-name span{color:var(--naranja);}
+.footer-brand-desc{font-size:14px;color:rgba(255,255,255,.4);line-height:1.7;margin-bottom:1.5rem;}
+.footer-col-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--naranja);margin-bottom:1.25rem;}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.6rem;}
+.footer-links a{font-size:14px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s,padding-left .2s;}
+.footer-links a:hover{color:var(--naranja);padding-left:6px;}
+.footer-bottom{display:flex;justify-content:space-between;font-size:13px;
+  color:rgba(255,255,255,.3);flex-wrap:wrap;gap:1rem;}
+.footer-bottom b{color:var(--naranja);}
+
+/* ══ REVEAL ══ */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s var(--ease),transform .65s var(--ease);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.08s;}.d2{transition-delay:.16s;}.d3{transition-delay:.24s;}
+.d4{transition-delay:.32s;}.d5{transition-delay:.40s;}.d6{transition-delay:.48s;}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:768px){
+  nav{padding:0 1.25rem;}
+  nav>.nav-links,nav>.nav-cta{display:none;}
+  .nav-hamburger{display:flex;}
+  .panel-intro{grid-template-columns:1fr;}
+  .pi-visual{min-height:220px;}
+  .proceso-grid{grid-template-columns:1fr;}
+  .footer-top{grid-template-columns:1fr;gap:2rem;}
+  .footer-top>div:first-child{grid-column:span 1;}
+  .cta-final{flex-direction:column;}
+  .cta-btns{flex-direction:column;width:100%;}
+  .btn-dark,.btn-outline-dark{justify-content:center;width:100%;}
+  .tab-btn{padding:1rem 1.1rem;font-size:14px;}
+  .gallery-track-wrap::before,.gallery-track-wrap::after{width:40px;}
+  .gallery-card{width:clamp(200px,72vw,280px);}
+}
+@media(max-width:480px){
+  .unidades-grid{grid-template-columns:1fr;}
+  .specs-row{flex-wrap:wrap;}
+  .spec{flex:0 0 calc(50% - 1px);}
+  .page-hero{min-height:320px;}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- MOBILE MENU -->
+<div class="nav-mobile" id="mobileNav">
+  <div class="nav-mobile-inner">
+    <ul class="nav-links">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="camra-servicios.html" class="active">Servicios</a></li>
+      <li><a href="camra-nosotros.html">Nosotros</a></li>
+      <li><a href="index.html#cobertura">Cobertura</a></li>
+      <li><a href="index.html#contacto">Contacto</a></li>
+    </ul>
+    <a href="index.html#contacto" class="nav-cta-mobile">Solicitar cotización</a>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a class="nav-logo" href="index.html">C<span>A</span>MR<span>A</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="camra-servicios.html" class="active">Servicios</a></li>
+    <li><a href="camra-nosotros.html">Nosotros</a></li>
+    <li><a href="index.html#cobertura">Cobertura</a></li>
+    <li><a href="index.html#contacto">Contacto</a></li>
+  </ul>
+  <a href="index.html#contacto" class="nav-cta">Solicitar cotización</a>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Abrir menú" type="button">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-cur">Servicios</span>
+    </div>
+    <h1>NUESTROS<br><em>SERVICIOS</em></h1>
+    <p class="hero-sub">Transporte terrestre, carga especializada, portacontenedores y logística nacional — la unidad correcta para cada carga.</p>
+  </div>
+</div>
+
+<!-- TAB NAV -->
+<div class="tab-nav-wrap">
+  <div class="tab-nav" id="tabNav">
+    <button class="tab-btn active" data-tab="carga">Carga General</button>
+    <button class="tab-btn" data-tab="peligrosa">Carga Peligrosa</button>
+    <button class="tab-btn" data-tab="contenedores">Contenedores</button>
+    <button class="tab-btn" data-tab="plataformas">Plataformas</button>
+    <button class="tab-btn" data-tab="logistica">Logística</button>
+    <button class="tab-btn" data-tab="flota">Nuestra Flota</button>
+    <span class="tab-indicator" id="tabIndicator"></span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ PANELS ═══════════════════════════════════ -->
+<div class="tab-panels">
+
+  <!-- ░░░ PANEL 1 — CARGA GENERAL ░░░ -->
+  <div class="tab-panel active" id="panel-carga">
+    <div class="panel-intro">
+      <div class="pi-visual">
+        <div class="pi-visual-grid"></div>
+        <div class="pi-visual-inner">
+          <div class="pi-visual-icon">
+            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div class="pi-visual-num">Trailer / Tractocamión</div>
+        </div>
+        <div class="pi-img-badge">Servicio principal</div>
+      </div>
+      <div class="pi-text">
+        <div class="pi-tag"><div class="pi-tag-dot"></div><div class="pi-tag-label">01 — Transporte de Carga</div></div>
+        <h2 class="pi-title">CARGA SUELTA<br>Y GENERAL A<br><em>NIVEL NACIONAL</em></h2>
+        <p class="pi-desc">Movemos carga suelta, carga general y materiales a nivel nacional en modalidades articulado y doble articulado. Con flota 100% propia garantizamos que su mercancía llega en tiempo y forma a cualquier destino del país.</p>
+        <ul class="feat-list">
+          <li>Carga suelta, general y de materiales</li>
+          <li>Modalidad articulado y doble articulado</li>
+          <li>Cobertura en toda la República Mexicana</li>
+          <li>Seguimiento y comunicación en tiempo real</li>
+          <li>Operadores certificados con licencia federal</li>
+          <li>Carta porte y documentación completa SAT/SCT</li>
+        </ul>
+        <div class="specs-row">
+          <div class="spec"><div class="spec-val">Nacional</div><div class="spec-key">Cobertura</div></div>
+          <div class="spec"><div class="spec-val">28 T</div><div class="spec-key">Cap. máx.</div></div>
+          <div class="spec"><div class="spec-val">24/7</div><div class="spec-key">Operación</div></div>
+        </div>
+        <a href="index.html#contacto" class="btn-dark" style="width:fit-content">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Cotizar flete
+        </a>
+      </div>
+    </div>
+
+    <!-- Galería (sin fotos) -->
+    <div class="gallery-section">
+      <div class="gallery-header reveal">
+        <div>
+          <h2>UNIDADES PARA<br><span>CARGA GENERAL</span></h2>
+        </div>
+        <p>Desliza para ver las unidades disponibles para transporte de carga general y materiales.</p>
+      </div>
+      <div class="gallery-track-wrap">
+        <div class="gallery-track" id="track-carga">
+          <div class="gallery-card">
+            <div class="gallery-card-visual"><div class="gallery-card-visual-grid"></div>
+              <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+            <div class="gallery-card-body"><div class="gc-tag">Larga distancia</div><div class="gc-title">Trailer / Tractocamión</div><div class="gc-cap">Hasta 28 toneladas</div></div>
+          </div>
+          <div class="gallery-card">
+            <div class="gallery-card-visual"><div class="gallery-card-visual-grid"></div>
+              <svg viewBox="0 0 24 24"><rect x="1" y="5" width="20" height="11" rx="1"/><path d="M5 16v2M19 16v2"/></svg></div>
+            <div class="gallery-card-body"><div class="gc-tag">Regional</div><div class="gc-title">Torton</div><div class="gc-cap">Hasta 14 toneladas</div></div>
+          </div>
+          <div class="gallery-card">
+            <div class="gallery-card-visual"><div class="gallery-card-visual-grid"></div>
+              <svg viewBox="0 0 24 24"><rect x="2" y="6" width="16" height="9" rx="1"/><path d="M18 9h3l1 3v3h-4"/><circle cx="6.5" cy="18.5" r="1.8"/><circle cx="17.5" cy="18.5" r="1.8"/></svg></div>
+            <div class="gallery-card-body"><div class="gc-tag">Urbano</div><div class="gc-title">Rabón</div><div class="gc-cap">Hasta 7 toneladas</div></div>
+          </div>
+          <div class="gallery-card">
+            <div class="gallery-card-visual"><div class="gallery-card-visual-grid"></div>
+              <svg viewBox="0 0 24 24"><path d="M3 13h11l3 3h4v4H3z"/><circle cx="7" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/></svg></div>
+            <div class="gallery-card-body"><div class="gc-tag">Última milla</div><div class="gc-title">Camioneta 3.5 T</div><div class="gc-cap">Cerrada y abierta</div></div>
+          </div>
+        </div>
+        <p class="gallery-hint">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          Desliza para ver más
+          <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░░ PANEL 2 — CARGA PELIGROSA ░░░ -->
+  <div class="tab-panel" id="panel-peligrosa">
+    <div class="panel-intro" style="background:var(--negro);">
+      <div class="pi-visual" style="order:2">
+        <div class="pi-visual-grid"></div>
+        <div class="pi-visual-inner">
+          <div class="pi-visual-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2 2 20h20L12 2z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="16.5" x2="12" y2="16.6"/></svg>
+          </div>
+          <div class="pi-visual-num">Materiales peligrosos</div>
+        </div>
+        <div class="pi-img-badge">Certificado SCT</div>
+      </div>
+      <div class="pi-text pi-dark" style="order:1">
+        <div class="pi-tag"><div class="pi-tag-dot"></div><div class="pi-tag-label">02 — Carga Peligrosa y Especializada</div></div>
+        <h2 class="pi-title">RESIDUOS<br>PELIGROSOS Y<br><em>SOBREDIMENSIÓN</em></h2>
+        <p class="pi-desc">Manejo profesional de residuos peligrosos y carga con exceso de dimensiones. Operadores especializados, protocolos de seguridad vigentes y toda la documentación exigida por la SCT y SEMARNAT en cada traslado.</p>
+        <ul class="feat-list bg-dark">
+          <li>Transporte de residuos peligrosos certificado</li>
+          <li>Carga con exceso de dimensiones y peso</li>
+          <li>Operadores con licencia federal y capacitación</li>
+          <li>Protocolos de seguridad en todo el trayecto</li>
+          <li>Manifiestos SEMARNAT y documentación SCT</li>
+          <li>Coordinación con autoridades en ruta</li>
+        </ul>
+        <div class="specs-row" style="background:rgba(255,255,255,.08);">
+          <div class="spec" style="background:rgba(255,255,255,.04);"><div class="spec-val">SCT</div><div class="spec-key" style="color:rgba(255,255,255,.4);">Certificación</div></div>
+          <div class="spec" style="background:rgba(255,255,255,.04);"><div class="spec-val">SEMARNAT</div><div class="spec-key" style="color:rgba(255,255,255,.4);">Manifiestos</div></div>
+          <div class="spec" style="background:rgba(255,255,255,.04);"><div class="spec-val">Piloto</div><div class="spec-key" style="color:rgba(255,255,255,.4);">Escolta</div></div>
+        </div>
+        <a href="index.html#contacto" class="btn-dark" style="width:fit-content;background:var(--naranja);color:var(--negro);border-color:var(--naranja)">
+          Consultar disponibilidad
+        </a>
+      </div>
+    </div>
+
+    <div class="unidades-section">
+      <h2 class="us-title reveal">EQUIPO PARA <span>CARGA PELIGROSA</span></h2>
+      <p class="us-sub reveal">Unidades acondicionadas y homologadas para el manejo seguro de residuos y carga especial.</p>
+      <div class="unidades-grid">
+        <div class="unidad-card reveal d1">
+          <div class="unidad-card-visual"><div class="unidad-card-visual-grid"></div>
+            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <div class="unidad-card-tag">Peligrosa</div>
+          </div>
+          <div class="unidad-card-body">
+            <div class="unidad-name">Trailer Especializado</div>
+            <div class="unidad-cap">Con accesorios de seguridad</div>
+            <p class="unidad-desc">Caja equipada con contenedores y amarres certificados para materiales peligrosos según normativa.</p>
+          </div>
+        </div>
+        <div class="unidad-card reveal d2">
+          <div class="unidad-card-visual"><div class="unidad-card-visual-grid"></div>
+            <svg viewBox="0 0 24 24"><path d="M3 13h11l3 3h4v4H3z"/><circle cx="7" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/></svg>
+            <div class="unidad-card-tag">Escolta</div>
+          </div>
+          <div class="unidad-card-body">
+            <div class="unidad-name">Unidad Piloto</div>
+            <div class="unidad-cap">Escolta de seguridad</div>
+            <p class="unidad-desc">Vehículo de acompañamiento para traslados con exceso de dimensiones o peso, con señalización reglamentaria.</p>
+          </div>
+        </div>
+        <div class="unidad-card reveal d3">
+          <div class="unidad-card-visual"><div class="unidad-card-visual-grid"></div>
+            <svg viewBox="0 0 24 24"><rect x="2" y="9" width="20" height="5"/><path d="M2 14v3h20v-3"/></svg>
+            <div class="unidad-card-tag">Sobredimensión</div>
+          </div>
+          <div class="unidad-card-body">
+            <div class="unidad-name">Lowboy con Escolta</div>
+            <div class="unidad-cap">Maquinaria pesada</div>
+            <p class="unidad-desc">Para carga que excede las dimensiones permitidas en carretera, con permisos especiales de tránsito.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░░ PANEL 3 — CONTENEDORES ░░░ -->
+  <div class="tab-panel" id="panel-contenedores">
+    <div class="panel-intro">
+      <div class="pi-visual">
+        <div class="pi-visual-grid"></div>
+        <div class="pi-visual-inner">
+          <div class="pi-visual-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="1"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="9" y1="6" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="18"/></svg>
+          </div>
+          <div class="pi-visual-num">Puerto de Veracruz</div>
+        </div>
+        <div class="pi-img-badge">Puerto de Veracruz</div>
+      </div>
+      <div class="pi-text">
+        <div class="pi-tag"><div class="pi-tag-dot"></div><div class="pi-tag-label">03 — Portacontenedores</div></div>
+        <h2 class="pi-title">CONTENEDORES<br><em>20 Y 40</em><br>PIES</h2>
+        <p class="pi-desc">Servicio de portacontenedores desde y hacia el Puerto de Veracruz y principales terminales del país. Manejo de contenedores de 20 y 40 pies, cajas secas para comercio interior y exterior con total seguridad.</p>
+        <ul class="feat-list">
+          <li>Portacontenedor 20 pies (TEU)</li>
+          <li>Portacontenedor 40 pies (FEU)</li>
+          <li>Caja seca 20 y 40 pies</li>
+          <li>Operaciones en Puerto de Veracruz</li>
+          <li>Cobertura a terminales en todo el país</li>
+          <li>Coordinación con agentes aduanales</li>
+        </ul>
+        <div class="specs-row">
+          <div class="spec"><div class="spec-val">20'</div><div class="spec-key">TEU</div></div>
+          <div class="spec"><div class="spec-val">40'</div><div class="spec-key">FEU</div></div>
+          <div class="spec"><div class="spec-val">Puerto</div><div class="spec-key">Veracruz</div></div>
+        </div>
+        <a href="index.html#contacto" class="btn-dark" style="width:fit-content">
+          Cotizar contenedor
+        </a>
+      </div>
+    </div>
+
+    <div class="unidades-section">
+      <h2 class="us-title reveal">TIPOS DE <span>CONTENEDOR</span></h2>
+      <p class="us-sub reveal">Selecciona el contenedor adecuado para tu tipo de carga y destino.</p>
+      <div class="unidades-grid">
+        <div class="unidad-card reveal d1">
+          <div class="unidad-card-visual"><div class="unidad-card-visual-grid"></div>
+            <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="1"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+            <div class="unidad-card-tag">TEU</div>
+          </div>
+          <div class="unidad-card-body">
+            <div class="unidad-name">Contenedor 20 pies</div>
+            <div class="unidad-cap">~25 T · 33 m³</div>
+            <p class="unidad-desc">Ideal para cargas medianas, piezas industriales, exportaciones pequeñas y distribución local desde el puerto.</p>
+          </div>
+        </div>
+        <div class="unidad-card reveal d2">
+          <div class="unidad-card-visual"><div class="unidad-card-visual-grid"></div>
+            <svg viewBox="0 0 24 24"><rect x="1" y="6" width="22" height="12" rx="1"/><line x1="1" y1="12" x2="23" y2="12"/></svg>
+            <div class="unidad-card-tag">FEU</div>
+          </div>
+          <div class="unidad-card-body">
+            <div class="unidad-name">Contenedor 40 pies</div>
+            <div class="unidad-cap">~26 T · 67 m³</div>
+            <p class="unidad-desc">Para grandes volúmenes de mercancía. El más utilizado en comercio exterior por su relación costo-capacidad.</p>
+          </div>
+        </div>
+        <div class="unidad-card reveal d3">
+          <div class="unidad-card-visual"><div class="unidad-card-visual-grid"></div>
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18"/></svg>
+            <div class="unidad-card-tag">Caja Seca</div>
+          </div>
+          <div class="unidad-card-body">
+            <div class="unidad-name">Caja Seca</div>
+            <div class="unidad-cap">20' y 40' disponibles</div>
+            <p class="unidad-desc">Protección total para mercancía sensible a la intemperie. Carga general seca en distribución nacional e internacional.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░░ PANEL 4 — PLATAFORMAS ░░░ -->
+  <div class="tab-panel" id="panel-plataformas">
+    <div class="panel-intro" style="background:var(--negro);">
+      <div class="pi-visual" style="order:2">
+        <div class="pi-visual-grid"></div>
+        <div class="pi-visual-inner">
+          <div class="pi-visual-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="9" width="20" height="5"/><path d="M2 14v3h20v-3"/><circle cx="6" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+          </div>
+          <div class="pi-visual-num">Cama baja / Lowboy</div>
+        </div>
+        <div class="pi-img-badge">Carga especial</div>
+      </div>
+      <div class="pi-text pi-dark" style="order:1">
+        <div class="pi-tag"><div class="pi-tag-dot"></div><div class="pi-tag-label">04 — Plataformas y Equipo Especial</div></div>
+        <h2 class="pi-title">PLATAFORMA<br><em>CAMA BAJA</em><br>Y LOWBOY</h2>
+        <p class="pi-desc">Contamos con el equipo correcto para carga voluminosa o de gran peso. Plataformas 48, camas bajas de 2 y 3 ejes, lowboy y unidades piloto para traslados de sobredimensión en toda la República.</p>
+        <ul class="feat-list bg-dark">
+          <li>Plataforma 48 pies para carga general voluminosa</li>
+          <li>Cama baja de 2 ejes — maquinaria media</li>
+          <li>Cama baja de 3 ejes — maquinaria pesada</li>
+          <li>Lowboy para equipos de gran tamaño</li>
+          <li>Unidad piloto de escolta incluida</li>
+          <li>Coordinación de permisos especiales SCT</li>
+        </ul>
+        <div class="specs-row" style="background:rgba(255,255,255,.08);">
+          <div class="spec" style="background:rgba(255,255,255,.04);"><div class="spec-val">48'</div><div class="spec-key" style="color:rgba(255,255,255,.4);">Plataforma</div></div>
+          <div class="spec" style="background:rgba(255,255,255,.04);"><div class="spec-val">3 Ejes</div><div class="spec-key" style="color:rgba(255,255,255,.4);">Cama baja</div></div>
+          <div class="spec" style="background:rgba(255,255,255,.04);"><div class="spec-val">Piloto</div><div class="spec-key" style="color:rgba(255,255,255,.4);">Escolta</div></div>
+        </div>
+        <a href="index.html#contacto" class="btn-dark" style="width:fit-content;background:var(--naranja);color:var(--negro);border-color:var(--naranja)">
+          Solicitar plataforma
+        </a>
+      </div>
+    </div>
+
+    <div class="unidades-section">
+      <h2 class="us-title reveal">EQUIPO DE <span>PLATAFORMAS</span></h2>
+      <p class="us-sub reveal">Para cada tipo de carga especial, tenemos la plataforma adecuada.</p>
+      <div class="unidades-grid">
+        <div class="unidad-card reveal d1">
+          <div class="unidad-card-visual"><div class="unidad-card-visual-grid"></div>
+            <svg viewBox="0 0 24 24"><rect x="2" y="10" width="20" height="4"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+            <div class="unidad-card-tag">Plataforma</div>
+          </div>
+          <div class="unidad-card-body">
+            <div class="unidad-name">Plataforma 48 pies</div>
+            <div class="unidad-cap">Carga general volumétrica</div>
+            <p class="unidad-desc">Para maquinaria, estructuras metálicas y carga que no requiere contenedor cerrado. Gran superficie de carga.</p>
+          </div>
+        </div>
+        <div class="unidad-card reveal d2">
+          <div class="unidad-card-visual"><div class="unidad-card-visual-grid"></div>
+            <svg viewBox="0 0 24 24"><rect x="2" y="12" width="20" height="4"/><circle cx="6" cy="19" r="1.6"/><circle cx="12" cy="19" r="1.6"/><circle cx="18" cy="19" r="1.6"/></svg>
+            <div class="unidad-card-tag">Cama baja</div>
+          </div>
+          <div class="unidad-card-body">
+            <div class="unidad-name">Cama Baja 2/3 ejes</div>
+            <div class="unidad-cap">Maquinaria pesada</div>
+            <p class="unidad-desc">Altura de carga reducida para maquinaria con restricciones de altura. Disponible en 2 y 3 ejes según el peso.</p>
+          </div>
+        </div>
+        <div class="unidad-card reveal d3">
+          <div class="unidad-card-visual"><div class="unidad-card-visual-grid"></div>
+            <svg viewBox="0 0 24 24"><rect x="1" y="13" width="22" height="3"/><circle cx="5" cy="19" r="1.6"/><circle cx="19" cy="19" r="1.6"/></svg>
+            <div class="unidad-card-tag">Lowboy</div>
+          </div>
+          <div class="unidad-card-body">
+            <div class="unidad-name">Lowboy</div>
+            <div class="unidad-cap">Sobredimensionado</div>
+            <p class="unidad-desc">Para equipos de gran tamaño y peso. La solución ideal cuando otras plataformas no son suficientes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░░ PANEL 5 — LOGÍSTICA ░░░ -->
+  <div class="tab-panel" id="panel-logistica">
+    <div class="panel-intro">
+      <div class="pi-visual">
+        <div class="pi-visual-grid"></div>
+        <div class="pi-visual-inner">
+          <div class="pi-visual-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+          </div>
+          <div class="pi-visual-num">Operación 24/7</div>
+        </div>
+        <div class="pi-img-badge">Alta eficiencia</div>
+      </div>
+      <div class="pi-text">
+        <div class="pi-tag"><div class="pi-tag-dot"></div><div class="pi-tag-label">05 — Logística Nacional</div></div>
+        <h2 class="pi-title">MOVIMIENTOS<br>LOGÍSTICOS<br><em>OPTIMIZADOS</em></h2>
+        <p class="pi-desc">Nuestros movimientos logísticos, maniobras y procesos garantizan que su mercancía llegue en tiempo y forma. Nos adaptamos a las necesidades de su empresa y cuando es preciso nos adelantamos a ellas para ofrecer la mejor solución.</p>
+        <ul class="feat-list">
+          <li>Planificación y optimización de rutas</li>
+          <li>Maniobras de carga y descarga especializadas</li>
+          <li>Coordinación de flotillas multi-unidad</li>
+          <li>Trato personalizado y atención continua</li>
+          <li>Seguimiento y reporte de estatus en tiempo real</li>
+          <li>Soluciones a la medida de cada cliente</li>
+        </ul>
+        <div class="specs-row">
+          <div class="spec"><div class="spec-val">99%</div><div class="spec-key">Puntualidad</div></div>
+          <div class="spec"><div class="spec-val">500+</div><div class="spec-key">Clientes</div></div>
+          <div class="spec"><div class="spec-val">Nacional</div><div class="spec-key">Alcance</div></div>
+        </div>
+        <a href="index.html#contacto" class="btn-dark" style="width:fit-content">
+          Hablar con un asesor
+        </a>
+      </div>
+    </div>
+
+    <div class="unidades-section">
+      <h2 class="us-title reveal">NUESTRO <span>PROCESO</span></h2>
+      <p class="us-sub reveal">Así garantizamos que su mercancía llegue en tiempo y forma, siempre.</p>
+      <div class="proceso-grid">
+        <div class="paso-card reveal d1">
+          <div class="paso-num">01</div>
+          <div class="paso-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.35 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.69a16 16 0 0 0 6 6l1.12-1.12a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div class="paso-title">Solicitud</div>
+          <p class="paso-desc">Nos contactas por teléfono, correo o formulario. Recibimos todos los detalles de tu envío y necesidades específicas.</p>
+        </div>
+        <div class="paso-card reveal d2">
+          <div class="paso-num">02</div>
+          <div class="paso-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="paso-title">Cotización en 2 horas</div>
+          <p class="paso-desc">Te enviamos una cotización detallada y competitiva con la unidad correcta para tu tipo de carga en menos de 2 horas.</p>
+        </div>
+        <div class="paso-card reveal d3">
+          <div class="paso-num">03</div>
+          <div class="paso-icon"><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+          <div class="paso-title">Recolección puntual</div>
+          <p class="paso-desc">Nuestro operador llega en el horario acordado a recoger la mercancía. Revisión, amarres y documentación en origen.</p>
+        </div>
+        <div class="paso-card reveal d4">
+          <div class="paso-num">04</div>
+          <div class="paso-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div class="paso-title">Seguimiento en ruta</div>
+          <p class="paso-desc">Monitoreo constante de la unidad y comunicación directa con el operador durante todo el trayecto a destino.</p>
+        </div>
+        <div class="paso-card reveal d5">
+          <div class="paso-num">05</div>
+          <div class="paso-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="paso-title">Entrega confirmada</div>
+          <p class="paso-desc">Entrega segura al destinatario con documentación de acuse. Notificación inmediata al cliente de la entrega exitosa.</p>
+        </div>
+        <div class="paso-card reveal d6">
+          <div class="paso-num">06</div>
+          <div class="paso-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="paso-title">Facturación CFDI 4.0</div>
+          <p class="paso-desc">Emisión inmediata de Carta Porte y CFDI 4.0 conforme a los requisitos del SAT. Documentación completa en tiempo real.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░░ PANEL 6 — NUESTRA FLOTA ░░░ -->
+  <div class="tab-panel" id="panel-flota">
+    <div class="gallery-section" style="padding-top:clamp(48px,6vw,72px);">
+      <div class="gallery-header reveal">
+        <div>
+          <h2>TODA NUESTRA<br><span>FLOTA PROPIA</span></h2>
+        </div>
+        <p>Flota 100% propia con mantenimiento preventivo y operadores certificados. La unidad correcta para cada tipo y volumen de carga.</p>
+      </div>
+      <div class="gallery-track-wrap">
+        <div class="gallery-track" id="track-flota">
+          <div class="gallery-card">
+            <div class="gallery-card-visual"><div class="gallery-card-visual-grid"></div>
+              <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+            <div class="gallery-card-body"><div class="gc-tag">Larga distancia</div><div class="gc-title">Trailer / Tractocamión</div><div class="gc-cap">Articulado y doble articulado</div></div>
+          </div>
+          <div class="gallery-card">
+            <div class="gallery-card-visual"><div class="gallery-card-visual-grid"></div>
+              <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="1"/><line x1="2" y1="12" x2="22" y2="12"/></svg></div>
+            <div class="gallery-card-body"><div class="gc-tag">Puerto</div><div class="gc-title">Portacontenedor</div><div class="gc-cap">20' y 40' pies</div></div>
+          </div>
+          <div class="gallery-card">
+            <div class="gallery-card-visual"><div class="gallery-card-visual-grid"></div>
+              <svg viewBox="0 0 24 24"><rect x="2" y="10" width="20" height="4"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg></div>
+            <div class="gallery-card-body"><div class="gc-tag">Especial</div><div class="gc-title">Plataforma 48</div><div class="gc-cap">Carga plana / volumétrica</div></div>
+          </div>
+          <div class="gallery-card">
+            <div class="gallery-card-visual"><div class="gallery-card-visual-grid"></div>
+              <svg viewBox="0 0 24 24"><rect x="1" y="13" width="22" height="3"/><circle cx="5" cy="19" r="1.6"/><circle cx="19" cy="19" r="1.6"/></svg></div>
+            <div class="gallery-card-body"><div class="gc-tag">Sobredimensión</div><div class="gc-title">Cama Baja</div><div class="gc-cap">2 y 3 ejes · Lowboy</div></div>
+          </div>
+          <div class="gallery-card">
+            <div class="gallery-card-visual"><div class="gallery-card-visual-grid"></div>
+              <svg viewBox="0 0 24 24"><rect x="1" y="5" width="20" height="11" rx="1"/><path d="M5 16v2M19 16v2"/></svg></div>
+            <div class="gallery-card-body"><div class="gc-tag">Regional</div><div class="gc-title">Torton</div><div class="gc-cap">Hasta 14 toneladas</div></div>
+          </div>
+          <div class="gallery-card">
+            <div class="gallery-card-visual"><div class="gallery-card-visual-grid"></div>
+              <svg viewBox="0 0 24 24"><rect x="2" y="6" width="16" height="9" rx="1"/><path d="M18 9h3l1 3v3h-4"/><circle cx="6.5" cy="18.5" r="1.8"/><circle cx="17.5" cy="18.5" r="1.8"/></svg></div>
+            <div class="gallery-card-body"><div class="gc-tag">Urbano</div><div class="gc-title">Rabón</div><div class="gc-cap">Hasta 7 toneladas</div></div>
+          </div>
+          <div class="gallery-card">
+            <div class="gallery-card-visual"><div class="gallery-card-visual-grid"></div>
+              <svg viewBox="0 0 24 24"><path d="M3 13h11l3 3h4v4H3z"/><circle cx="7" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/></svg></div>
+            <div class="gallery-card-body"><div class="gc-tag">Última milla</div><div class="gc-title">Camioneta 3.5 T</div><div class="gc-cap">Cerrada y abierta</div></div>
+          </div>
+        </div>
+        <p class="gallery-hint">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          Desliza para ver todas las unidades
+          <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </p>
+      </div>
+    </div>
+
+    <!-- Tabla completa -->
+    <div class="tabla-section">
+      <h2 class="reveal">ESPECIFICACIONES<br><span>POR UNIDAD</span></h2>
+      <p class="reveal">Consulta la capacidad y tipo de carga adecuados para tu envío.</p>
+      <div class="tabla-wrap reveal">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Unidad</th><th>Capacidad</th><th>Tipo de carga</th><th>Uso</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><div class="td-name">Trailer / Tractocamión</div></td><td><div class="td-cap">Hasta 28 T</div></td><td>Carga general, materiales, suelta</td><td><span class="td-badge">Larga distancia</span></td></tr>
+            <tr><td><div class="td-name">Doble Articulado</div></td><td><div class="td-cap">Hasta 46 T</div></td><td>Carga general de alto volumen</td><td><span class="td-badge">Larga distancia</span></td></tr>
+            <tr><td><div class="td-name">Portacontenedor 40'</div></td><td><div class="td-cap">FEU · ~26 T</div></td><td>Contenedores importación/exportación</td><td><span class="td-badge blue">Comercio exterior</span></td></tr>
+            <tr><td><div class="td-name">Portacontenedor 20'</div></td><td><div class="td-cap">TEU · ~25 T</div></td><td>Contenedores importación/exportación</td><td><span class="td-badge blue">Comercio exterior</span></td></tr>
+            <tr><td><div class="td-name">Caja Seca 20' / 40'</div></td><td><div class="td-cap">Según caja</div></td><td>Carga seca protegida de intemperie</td><td><span class="td-badge blue">Comercio exterior</span></td></tr>
+            <tr><td><div class="td-name">Plataforma 48</div></td><td><div class="td-cap">48 pies</div></td><td>Maquinaria, estructuras, carga plana</td><td><span class="td-badge">Carga especial</span></td></tr>
+            <tr><td><div class="td-name">Cama Baja 3 ejes</div></td><td><div class="td-cap">Alta cap. de peso</div></td><td>Maquinaria pesada, equipo construcción</td><td><span class="td-badge">Carga especial</span></td></tr>
+            <tr><td><div class="td-name">Cama Baja 2 ejes</div></td><td><div class="td-cap">Cap. media</div></td><td>Vehículos, equipo industrial</td><td><span class="td-badge">Carga especial</span></td></tr>
+            <tr><td><div class="td-name">Lowboy</div></td><td><div class="td-cap">Doble eje</div></td><td>Maquinaria sobredimensionada</td><td><span class="td-badge red">Sobredimensión</span></td></tr>
+            <tr><td><div class="td-name">Torton</div></td><td><div class="td-cap">Hasta 14 T</div></td><td>Distribución regional y carga general</td><td><span class="td-badge">Regional</span></td></tr>
+            <tr><td><div class="td-name">Rabón</div></td><td><div class="td-cap">Hasta 7 T</div></td><td>Distribución urbana, zonas restringidas</td><td><span class="td-badge">Urbano</span></td></tr>
+            <tr><td><div class="td-name">Camioneta 3.5 T cerrada</div></td><td><div class="td-cap">3.5 T</div></td><td>Entregas express y carga protegida</td><td><span class="td-badge">Última milla</span></td></tr>
+            <tr><td><div class="td-name">Camioneta 3.5 T abierta</div></td><td><div class="td-cap">3.5 T</div></td><td>Materiales y carga a granel ligera</td><td><span class="td-badge">Última milla</span></td></tr>
+            <tr><td><div class="td-name">Unidad Piloto</div></td><td><div class="td-cap">Escolta</div></td><td>Acompañamiento en sobredimensión</td><td><span class="td-badge red">Escolta</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-panels -->
+
+<!-- CTA FINAL -->
+<div class="cta-final">
+  <div class="cta-final-text">
+    <h2>¿QUÉ TIPO DE<br>CARGA NECESITAS<br>MOVER?</h2>
+    <p>Cuéntanos tu necesidad y te asignamos la unidad correcta al mejor precio. En CAMRA nos adelantamos a lo que necesitas.</p>
+  </div>
+  <div class="cta-btns">
+    <a href="index.html#contacto" class="btn-dark">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Solicitar cotización
+    </a>
+    <a href="tel:+522294639825" class="btn-outline-dark">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.35 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.69a16 16 0 0 0 6 6l1.12-1.12a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      (229) 463-9825
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">C<span>A</span>MR<span>A</span></div>
+      <p class="footer-brand-desc">Transportes de carga y fletes a nivel nacional. Carga general, materiales, residuos peligrosos y carga especializada con flota propia desde Veracruz.</p>
+      <div style="display:flex;gap:12px;">
+        <a href="#" style="width:38px;height:38px;background:rgba(255,255,255,.07);border-radius:4px;display:flex;align-items:center;justify-content:center;transition:background .2s;" onmouseover="this.style.background='#F5A623'" onmouseout="this.style.background='rgba(255,255,255,0.07)'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="#" style="width:38px;height:38px;background:rgba(255,255,255,.07);border-radius:4px;display:flex;align-items:center;justify-content:center;transition:background .2s;" onmouseover="this.style.background='#F5A623'" onmouseout="this.style.background='rgba(255,255,255,0.07)'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 2H3v20l4-4h14V2z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Servicios</div>
+      <ul class="footer-links">
+        <li><a href="#" onclick="switchTab('carga');return false;">Carga general</a></li>
+        <li><a href="#" onclick="switchTab('peligrosa');return false;">Carga peligrosa</a></li>
+        <li><a href="#" onclick="switchTab('contenedores');return false;">Portacontenedores</a></li>
+        <li><a href="#" onclick="switchTab('plataformas');return false;">Plataformas</a></li>
+        <li><a href="#" onclick="switchTab('flota');return false;">Nuestra flota</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Empresa</div>
+      <ul class="footer-links">
+        <li><a href="camra-nosotros.html">Historia</a></li>
+        <li><a href="camra-nosotros.html">Misión y Visión</a></li>
+        <li><a href="camra-nosotros.html">Valores</a></li>
+        <li><a href="index.html#cobertura">Cobertura</a></li>
+        <li><a href="index.html#contacto">Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 <b>CAMRA</b> Grupo Empresarial · JF Molina 180 Int. 1, Los Pinos, Veracruz, Ver.</span>
+    <span>(229) 463-9825 · operaciones@camralogistics.com</span>
+  </div>
+</footer>
+
+<script>
+/* ══ PROGRESS ══ */
+const pb = document.getElementById('progressBar');
+window.addEventListener('scroll', () => {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  pb.style.width = (max > 0 ? (scrollY / max * 100) : 0) + '%';
+  document.getElementById('navbar').classList.toggle('scrolled', scrollY > 50);
+}, {passive:true});
+
+/* ══ MOBILE MENU ══ */
+const mNav = document.getElementById('mobileNav'), ham = document.getElementById('hamburger');
+let mOpen = false;
+function toggleMenu() {
+  mOpen = !mOpen;
+  mNav.classList.toggle('open', mOpen);
+  ham.classList.toggle('open', mOpen);
+  ham.setAttribute('aria-label', mOpen ? 'Cerrar menú' : 'Abrir menú');
+  document.documentElement.style.overflow = mOpen ? 'hidden' : '';
+}
+document.addEventListener('click', e => {
+  if (mOpen && !mNav.contains(e.target) && !ham.contains(e.target)) toggleMenu();
+});
+ham.addEventListener('touchend', e => { e.preventDefault(); toggleMenu(); }, {passive:false});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && mOpen) toggleMenu(); });
+
+/* ══ TAB SYSTEM ══ */
+const tabBtns = document.querySelectorAll('.tab-btn');
+const panels = {
+  carga:       document.getElementById('panel-carga'),
+  peligrosa:   document.getElementById('panel-peligrosa'),
+  contenedores:document.getElementById('panel-contenedores'),
+  plataformas: document.getElementById('panel-plataformas'),
+  logistica:   document.getElementById('panel-logistica'),
+  flota:       document.getElementById('panel-flota'),
+};
+const indicator = document.getElementById('tabIndicator');
+
+function setIndicator(btn) {
+  const nav = document.getElementById('tabNav');
+  const nr = nav.getBoundingClientRect(), br = btn.getBoundingClientRect();
+  indicator.style.left  = (br.left - nr.left + nav.scrollLeft) + 'px';
+  indicator.style.width = br.width + 'px';
+}
+
+function switchTab(id) {
+  tabBtns.forEach(b => {
+    const on = b.dataset.tab === id;
+    b.classList.toggle('active', on);
+    if (on) setIndicator(b);
+  });
+  Object.entries(panels).forEach(([k, p]) => p.classList.toggle('active', k === id));
+  setTimeout(triggerReveals, 60);
+  window.scrollTo({top: document.querySelector('.tab-nav-wrap').offsetTop - 72, behavior:'smooth'});
+}
+
+tabBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+/* ══ INDICATOR INIT ══ */
+window.addEventListener('load', () => {
+  const a = document.querySelector('.tab-btn.active');
+  if (a) setIndicator(a);
+});
+window.addEventListener('resize', () => {
+  const a = document.querySelector('.tab-btn.active');
+  if (a) setIndicator(a);
+});
+
+/* ══ REVEAL ══ */
+function triggerReveals() {
+  const els = document.querySelectorAll('.tab-panel.active .reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }});
+  }, {threshold:0.08, rootMargin:'0px 0px -30px 0px'});
+  els.forEach(el => { if (!el.classList.contains('visible')) obs.observe(el); });
+}
+triggerReveals();
+
+/* ══ DRAG SCROLL GALLERIES ══ */
+document.querySelectorAll('.gallery-track').forEach(track => {
+  let isDown = false, startX, scrollLeft;
+  track.addEventListener('mousedown', e => {
+    isDown = true; track.style.cursor = 'grabbing';
+    startX = e.pageX - track.offsetLeft; scrollLeft = track.scrollLeft;
+  });
+  track.addEventListener('mouseleave', () => { isDown = false; track.style.cursor = 'grab'; });
+  track.addEventListener('mouseup',    () => { isDown = false; track.style.cursor = 'grab'; });
+  track.addEventListener('mousemove',  e => {
+    if (!isDown) return; e.preventDefault();
+    track.scrollLeft = scrollLeft - (e.pageX - track.offsetLeft - startX) * 1.4;
+  });
+  let tStart = 0, tScroll = 0;
+  track.addEventListener('touchstart', e => { tStart = e.touches[0].pageX; tScroll = track.scrollLeft; }, {passive:true});
+  track.addEventListener('touchmove',  e => { track.scrollLeft = tScroll - (e.touches[0].pageX - tStart) * 1.2; }, {passive:true});
+});
+</script>
+</body>
+</html>
